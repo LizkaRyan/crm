@@ -84,9 +84,9 @@ public class SecurityConfig {
                 ).userDetailsService(crmUserDetails)
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
+                        .successHandler(oAuth2LoginSuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oauthUserService))
-                        .successHandler(oAuth2LoginSuccessHandler)
                 ).logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
