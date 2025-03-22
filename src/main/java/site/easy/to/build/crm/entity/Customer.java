@@ -7,8 +7,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.groups.Default;
 import site.easy.to.build.crm.customValidations.customer.UniqueEmail;
+import site.easy.to.build.crm.entity.budget.Budget;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -73,6 +75,9 @@ public class Customer {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer")
+    private List<Budget> budgets;
 
     public Customer() {
     }
