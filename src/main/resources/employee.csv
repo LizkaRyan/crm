@@ -1,0 +1,9 @@
+id,username,first_name,last_name,email,password,provider
+1,jdoe,John,Doe,john.doe@example.com,hashed_password,google
+-2,asmith,Alice,Smith,alice.smith@example.com,hashed_password,facebook
+3kjsd,bobert,Bob,Robert,bob.robert@example.com,hashed_password,instagram
+4,cmiller,Chris,Miller,chris.miller@example.com,hashed_password,local
+5,sjones,Sarah,Jones,sarah.jones@example.com,hashed_password,instagram
+6,twhite,Tom,White,tom.white@example.com,hashed_password,github
+7,kgreen,Karen,Green,karen.green@example.com,hashed_password,local
+8,mjohnson,Michael,Johnson,michael.johnson@example.com,hashed_password,instagram
