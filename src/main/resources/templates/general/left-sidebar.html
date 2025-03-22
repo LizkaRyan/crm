@@ -44,6 +44,27 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-small-cap">--- Budgets</li>
+                <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="fas fa-cogs"></i>
+                        <span class="hide-menu">Budgets</span>
+                    </a>
+                    <ul class="collapse">
+                        <li><a th:href="${'/budget/form'}">Insérer Budget</a></li>
+                        <li><a th:href="${'/budget'}">Liste budgets</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">--- Depenses</li>
+                <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="fas fa-cogs"></i>
+                        <span class="hide-menu">Depenses</span>
+                    </a>
+                    <ul class="collapse">
+                        <li><a th:href="${'/depense'}">Liste budgets</a></li>
+                    </ul>
+                </li>
                 <li class="nav-small-cap">--- Import</li>
                 <li>
                     <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
@@ -179,6 +200,26 @@
                                 <button type="submit"><i class="fa fa-power-off"></i> Logout</button>
                             </form>
                         </li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">--- Budgets</li>
+                <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="fas fa-cogs"></i>
+                        <span class="hide-menu">Budgets</span>
+                    </a>
+                    <ul class="collapse">
+                        <li><a th:href="${'/budget/my-budgets'}">My budgets</a></li>
+                    </ul>
+                </li>
+                <li class="nav-small-cap">--- Depense</li>
+                <li>
+                    <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)">
+                        <i class="fas fa-cogs"></i>
+                        <span class="hide-menu">Depense</span>
+                    </a>
+                    <ul class="collapse">
+                        <li><a th:href="${'/depense/my-depense'}">My Depenses</a></li>
                     </ul>
                 </li>
                 <li>

@@ -1,6 +1,8 @@
 package site.easy.to.build.crm.controller;
 
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -12,9 +14,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.*;
+import site.easy.to.build.crm.entity.budget.Budget;
 import site.easy.to.build.crm.entity.settings.TicketEmailSettings;
 import site.easy.to.build.crm.google.service.acess.GoogleAccessService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
+import site.easy.to.build.crm.service.budget.BudgetService;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.settings.TicketEmailSettingsService;
 import site.easy.to.build.crm.service.ticket.TicketService;
@@ -32,28 +36,24 @@ import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping("/employee/ticket")
+@AllArgsConstructor
 public class TicketController {
 
     private final TicketService ticketService;
+
     private final AuthenticationUtils authenticationUtils;
+
     private final UserService userService;
+
     private final CustomerService customerService;
+
     private final TicketEmailSettingsService ticketEmailSettingsService;
+
     private final GoogleGmailApiService googleGmailApiService;
+
     private final EntityManager entityManager;
 
-
-    @Autowired
-    public TicketController(TicketService ticketService, AuthenticationUtils authenticationUtils, UserService userService, CustomerService customerService,
-                            TicketEmailSettingsService ticketEmailSettingsService, GoogleGmailApiService googleGmailApiService, EntityManager entityManager) {
-        this.ticketService = ticketService;
-        this.authenticationUtils = authenticationUtils;
-        this.userService = userService;
-        this.customerService = customerService;
-        this.ticketEmailSettingsService = ticketEmailSettingsService;
-        this.googleGmailApiService = googleGmailApiService;
-        this.entityManager = entityManager;
-    }
+    private final BudgetService budgetService;
 
     @GetMapping("/show-ticket/{id}")
     public String showTicketDetails(@PathVariable("id") int id, Model model, Authentication authentication) {
@@ -125,7 +125,7 @@ public class TicketController {
     @PostMapping("/create-ticket")
     public String createTicket(@ModelAttribute("ticket") @Validated Ticket ticket, BindingResult bindingResult, @RequestParam("customerId") int customerId,
                                @RequestParam Map<String, String> formParams, Model model,
-                               @RequestParam("employeeId") int employeeId, Authentication authentication) {
+                               @RequestParam("employeeId") int employeeId, Authentication authentication, HttpSession session) {
 
         int userId = authenticationUtils.getLoggedInUserId(authentication);
         User manager = userService.findById(userId);
@@ -169,9 +169,10 @@ public class TicketController {
         ticket.setEmployee(employee);
         ticket.setCreatedAt(LocalDateTime.now());
 
-        ticketService.save(ticket);
+//        ticketService.save(ticket);
+        session.setAttribute("ticket",ticket);
 
-        return "redirect:/employee/ticket/assigned-tickets";
+        return "redirect:/depense/form";
     }
 
     @GetMapping("/update-ticket/{id}")

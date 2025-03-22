@@ -48,6 +48,9 @@ public class Ticket {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Transient
+    private Integer idBudget;
+
     public Ticket() {
     }
 
