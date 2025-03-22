@@ -1,4 +1,4 @@
-package site.easy.to.build.crm.csv;
+package site.easy.to.build.crm.data;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class CSVFileTest {
+public class DataTest {
 
     @Test
     void importCSV()throws Exception{
