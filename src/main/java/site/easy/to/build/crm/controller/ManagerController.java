@@ -48,6 +48,12 @@ public class ManagerController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @GetMapping("/delete")
+    public String deleteAllData(){
+        this.userService.deleteAllUselessData();
+        return "redirect:/employee/settings/google-services";
+    }
+
     @GetMapping("/manager/all-users")
     public String showAllUsers(Model model, Authentication authentication) {
         List<User> profiles = userService.findAll();
