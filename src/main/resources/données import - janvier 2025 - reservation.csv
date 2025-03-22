@@ -1,0 +1,4 @@
+ref,espace,client,date,heure_debut,duree,option
+r001,rubis,0349049881,11/01/2025,09:00,1,"opt1, opt3"
+r002,rubis,0381034567,14/01/2025,11:00,3,opt4
+r003,or,0349049881,23/03/2025,14:00,4,"opt2, opt1"

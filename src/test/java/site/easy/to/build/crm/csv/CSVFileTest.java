@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import site.easy.to.build.crm.dto.Employee;
+import site.easy.to.build.crm.dto.ReservationDTO;
 import site.easy.to.build.crm.util.csv.CSVFile;
 import site.easy.to.build.crm.util.csv.ConstraintCSV;
 
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class CSVFileTest {
@@ -19,7 +22,7 @@ public class CSVFileTest {
     @Test
     void importCSV()throws Exception{
         // Chemin du fichier réel
-        String filePath = "C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\employee.csv";
+        String filePath = "C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\test.csv";
 
         try {
             // Charger le fichier en tant que FileInputStream
@@ -35,16 +38,20 @@ public class CSVFileTest {
             );
 
             // Exemple d'utilisation
-            CSVFile<Employee> csvFile = new CSVFile<Employee>(multipartFile,",");
-            csvFile.addConstraint("id", ConstraintCSV.INTPOSITIVE);
+            CSVFile<ReservationDTO> csvFile = new CSVFile<>(multipartFile,";");
+            csvFile.addConstraint("duree", ConstraintCSV.INT_POSITIVE)
+                    .addConstraint("date",ConstraintCSV.LOCALDATE)
+                    .addConstraint("heure_debut",ConstraintCSV.LOCAL_TIME)
+                    .addConstraint("option",ConstraintCSV.LIST_FOREIGN);
             csvFile.readAndTransform(v->
-                new Employee(
-                (int)v.get("id"),
-                (String)v.get("username"),
-                (String)v.get("first_name"),
-                (String)v.get("last_name"),
-                (String)v.get("password"),
-                (String)v.get("provider"))
+                new ReservationDTO(
+                (String)v.get("ref"),
+                (String)v.get("espace"),
+                (String)v.get("client"),
+                (LocalDate)v.get("date"),
+                (LocalTime)v.get("heure_debut"),
+                (int)v.get("duree"),
+                (List<String>)v.get("option"))
             );
 
             System.out.println("VITA");
