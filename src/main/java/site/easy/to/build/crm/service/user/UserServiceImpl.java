@@ -14,6 +14,11 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
+    public void deleteAllUselessData(){
+        userRepository.deleteAllUselessData();
+    }
+
+    @Override
     public long countAllUsers() {
         return userRepository.count();
     }

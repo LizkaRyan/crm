@@ -2,7 +2,10 @@ package site.easy.to.build.crm.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import site.easy.to.build.crm.entity.User;
 
 import java.util.List;
@@ -23,6 +26,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     public User findByToken(String token);
 
     long count();
+
+    @Modifying
+    @Transactional
+    @Query(value = "CALL deleteAllUselessData()", nativeQuery = true)
+    void deleteAllUselessData();
 
     public List<User> findTopNByOrderByCreatedAtDesc(int limit, Pageable pageable);
 }
