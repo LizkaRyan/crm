@@ -93,10 +93,11 @@
                   </thead>
                   <tbody>
                   <tr th:if="${depenses != null}" th:each="depense : ${depenses}">
+                    <td th:text="${depense.idDepense}"></td>
                     <td th:text="${depense.amount}"></td>
                     <td th:if="${depense.lead!=null}">Lead: <span th:text="${depense.lead.name}"></span></td>
                     <td th:if="${depense.ticket!=null}">Ticket: <span th:text="${depense.ticket.subject}"></span></td>
-                    <td th:text="${budget.customer.name}"></td>
+                    <td th:text="${depense.budget.customer.name}"></td>
                   </tr>
                   </tbody>
                 </table>

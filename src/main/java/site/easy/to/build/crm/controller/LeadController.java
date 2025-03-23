@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -168,7 +169,7 @@ public class LeadController {
     public String createLead(@ModelAttribute("lead") @Validated Lead lead, BindingResult bindingResult,
                              @RequestParam("customerId") int customerId, @RequestParam("employeeId") int employeeId,
                              Authentication authentication, @RequestParam("allFiles")@Nullable String files,
-                             @RequestParam("folderId") @Nullable String folderId, Model model) throws JsonProcessingException {
+                             @RequestParam("folderId") @Nullable String folderId, Model model, HttpSession session) throws JsonProcessingException {
 
         int userId = authenticationUtils.getLoggedInUserId(authentication);
         User manager = userService.findById(userId);
@@ -208,20 +209,20 @@ public class LeadController {
             }
         }
 
-        Lead createdLead = leadService.save(lead);
-        fileUtil.saveFiles(allFiles, createdLead);
-
-        if (lead.getGoogleDrive() != null) {
-            fileUtil.saveGoogleDriveFiles(authentication, allFiles, folderId, createdLead);
-        }
+        session.setAttribute("lead",lead);
+        session.setAttribute("allFiles",allFiles);
+        session.setAttribute("folderId",folderId);
 
         if (lead.getStatus().equals("meeting-to-schedule")) {
-            return "redirect:/employee/calendar/create-event?leadId=" + lead.getLeadId();
+            session.setAttribute("redirect","redirect:/employee/calendar/create-event?leadId=" + lead.getLeadId());
         }
-        if(AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
-            return "redirect:/employee/lead/created-leads";
+        else if(AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
+            session.setAttribute("redirect","redirect:/employee/lead/created-leads");
         }
-        return "redirect:/employee/lead/assigned-leads";
+        else {
+            session.setAttribute("redirect","redirect:/employee/lead/assigned-leads");
+        }
+        return "redirect:/depense/form/lead";
     }
 
     @GetMapping("/update/{id}")

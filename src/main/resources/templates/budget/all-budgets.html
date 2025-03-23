@@ -87,7 +87,6 @@
                   <tr>
                     <th>#</th>
                     <th>Budget</th>
-                    <th>Seuil</th>
                     <th>Customer</th>
                   </tr>
                   </thead>
@@ -95,7 +94,6 @@
                   <tr th:if="${budgets != null}" th:each="budget : ${budgets}">
                     <td th:text="${budget.idBudget}"></td>
                     <td th:text="${budget.budget}"></td>
-                    <td th:text="${budget.tauxSeuil}"></td>
                     <td th:text="${budget.customer.name}"></td>
                   </tr>
                   </tbody>

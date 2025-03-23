@@ -172,7 +172,7 @@ public class TicketController {
 //        ticketService.save(ticket);
         session.setAttribute("ticket",ticket);
 
-        return "redirect:/depense/form";
+        return "redirect:/depense/form/ticket";
     }
 
     @GetMapping("/update-ticket/{id}")
