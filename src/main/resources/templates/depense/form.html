@@ -76,24 +76,21 @@
         <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Create New Contract</h4>
-              <form th:object="${budget}" th:action="@{/budget/create}" id="email-form" method="post">
-                <label class="m-t-20" for="subject">Budget:</label>
+              <h4 class="card-title">Create Depense</h4>
+              <form th:object="${depense}" th:action="${redirection}" method="post">
+
+                <label class="m-t-20" for="subject">Amount:</label>
                 <div class="input-group">
-                  <input type="number" id="subject" th:field="*{budget}" class="form-control">
+                  <input type="number" id="subject" th:field="*{amount}" class="form-control">
                 </div>
 
+                <label class="m-t-20" for="status">Budget:</label>
                 <div class="input-group">
-                  <input type="number" id="subject" th:field="*{tauxSeuil}" class="form-control">
-                </div>
-
-                <label class="m-t-20" for="status">status:</label>
-                <div class="input-group">
-                  <select id="status" th:field="*{customer}" class="form-control">
-                    <option th:each="customer : ${customers}" th:value="${customer.customerId}" th:text="${customer.name}"></option>
+                  <select id="status" th:field="*{idBudget}" class="form-control">
+                    <option th:each="budget : ${budgets}" th:value="${budget.idBudget}" th:text="${budget.name}"></option>
                   </select>
                 </div>
-                <button type="submit" class="btn btn-primary m-t-20">Create Contract</button>
+                <button type="submit" class="btn btn-primary m-t-20">Create Depense</button>
               </form>
             </div>
           </div>

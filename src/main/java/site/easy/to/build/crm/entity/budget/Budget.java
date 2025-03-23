@@ -17,8 +17,6 @@ public class Budget {
 
     private double budget;
 
-    private double tauxSeuil;
-
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id")
     private Customer customer;
