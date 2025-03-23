@@ -18,11 +18,11 @@ public class Depense {
 
     private double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
     @JoinColumn(name = "lead_id")
     private Lead lead;
 

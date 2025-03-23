@@ -2,6 +2,7 @@ package site.easy.to.build.crm.controller.budget;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.ResponseJSON;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
 import site.easy.to.build.crm.entity.budget.Depense;
@@ -17,8 +18,8 @@ public class DepenseRestController {
 
     private final DepenseService depenseService;
 
-    @PostMapping("/update/{idDepense}")
-    public ResponseJSON<Depense> update(@PathVariable("idDepense")Long idDepense, @RequestParam("amount")double amount){
+    @GetMapping("/update/{idDepense}/{amount}")
+    public ResponseJSON<Depense> update(@PathVariable("idDepense")Long idDepense, @PathVariable("amount")double amount){
         Depense depense=depenseService.update(idDepense,amount);
         return new ResponseJSON<Depense>(200,"Modification réussie",depense);
     }
@@ -36,5 +37,20 @@ public class DepenseRestController {
         map.put("totalTicketDepense",depenseService.findSumDepenseTicketEachCustomer());
         map.put("totalLeadDepense",depenseService.findSumDepenseLeadEachCustomer());
         return new ResponseJSON<>(200,"Requête réussie",map);
+    }
+
+    @GetMapping("/ticket/{customerId}")
+    public ResponseJSON<List<DepenseCause>> findDepenseTicketByIdCustomer(@PathVariable("customerId")Integer customerId){
+        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseTicketByCustomerId(customerId));
+    }
+
+    @GetMapping("/lead/{customerId}")
+    public ResponseJSON<List<DepenseCause>> findDepenseLeadByIdCustomer(@PathVariable("customerId")Integer customerId){
+        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseLeadByCustomerId(customerId));
+    }
+
+    @GetMapping("/{customerId}")
+    public ResponseJSON<List<DepenseCause>> findDepenseByIdCustomer(@PathVariable("customerId")Integer customerId){
+        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseCauseByCustomerId(customerId));
     }
 }

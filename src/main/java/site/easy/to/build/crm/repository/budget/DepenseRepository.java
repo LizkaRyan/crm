@@ -3,6 +3,7 @@ package site.easy.to.build.crm.repository.budget;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumDepense;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
 import site.easy.to.build.crm.entity.budget.Depense;
@@ -45,4 +46,31 @@ public interface DepenseRepository extends JpaRepository<Depense,Long> {
             d.budget.customer.name,d.budget.customer.customerId
             """)
     List<SumDepenseCustomer> findSumDepenseLeadEachCustomer();
+
+    @Query("""
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
+            from Depense d
+            left join d.lead l
+            left join d.ticket t
+            where not d.ticket is null and d.budget.customer.customerId = :customerId
+            """)
+    List<DepenseCause> findDepenseTicketByCustomerId(@Param("customerId")Integer customerId);
+
+    @Query("""
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
+            from Depense d
+            left join d.lead l
+            left join d.ticket t
+            where not d.lead is null and d.budget.customer.customerId = :customerId
+            """)
+    List<DepenseCause> findDepenseLeadByCustomerId(@Param("customerId")Integer customerId);
+
+    @Query("""
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name) 
+            from Depense d
+            left join d.lead l
+            left join d.ticket t
+            where d.budget.customer.customerId = :customerId
+            """)
+    List<DepenseCause> findDepenseCauseByCustomerId(@Param("customerId")Integer customerId);
 }

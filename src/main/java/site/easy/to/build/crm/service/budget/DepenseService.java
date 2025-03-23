@@ -2,6 +2,7 @@ package site.easy.to.build.crm.service.budget;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumDepense;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
 import site.easy.to.build.crm.entity.budget.Budget;
@@ -30,6 +31,11 @@ public class DepenseService {
         return depenseRepository.findDepenseByCustomerId(customerId);
     }
 
+    public List<DepenseCause> findDepenseCauseByCustomerId(Integer customerId){
+        List<DepenseCause> depenseCauses=depenseRepository.findDepenseCauseByCustomerId(customerId);
+        return depenseCauses;
+    }
+
     public List<Depense> findAll() {
         return depenseRepository.findAll();
     }
@@ -50,16 +56,19 @@ public class DepenseService {
 
     public void delete(Long idDepense){
         Depense depense=findDepense(idDepense);
-        if(depense.getTicket()!=null){
-            ticketService.delete(depense.getTicket());
-        }
-        else{
-            leadService.delete(depense.getLead());
-        }
+        this.depenseRepository.delete(depense);
     }
 
     public List<SumDepenseCustomer> findSumDepenseEachCustomer(){
         return this.depenseRepository.findSumDepenseEachCustomer();
+    }
+
+    public List<DepenseCause> findDepenseTicketByCustomerId(Integer customerId){
+        return this.depenseRepository.findDepenseTicketByCustomerId(customerId);
+    }
+
+    public List<DepenseCause> findDepenseLeadByCustomerId(Integer customerId){
+        return this.depenseRepository.findDepenseLeadByCustomerId(customerId);
     }
 
     public List<SumDepenseCustomer> findSumDepenseTicketEachCustomer(){
