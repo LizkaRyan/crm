@@ -61,6 +61,7 @@ public class SecurityConfig {
                 authorizeHttpRequests((authorize) -> authorize
 
                         .requestMatchers("/register/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/set-employee-password/**").permitAll()
                         .requestMatchers("/change-password/**").permitAll()
                         .requestMatchers("/font-awesome/**").permitAll()
