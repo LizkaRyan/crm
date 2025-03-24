@@ -11,7 +11,14 @@ TRUNCATE TABLE `user_roles`;
 TRUNCATE TABLE `roles`;
 TRUNCATE TABLE `user_profile`;
 TRUNCATE TABLE `oauth_users`;
-TRUNCATE TABLE `users`;
+delete from `users` where id != 52;
+
+ALTER TABLE users AUTO_INCREMENT=53;
+ALTER TABLE customer_login_info AUTO_INCREMENT=19;
+ALTER TABLE customer AUTO_INCREMENT=43;
+ALTER TABLE trigger_lead AUTO_INCREMENT=56;
+ALTER TABLE trigger_ticket AUTO_INCREMENT=47;
+ALTER TABLE trigger_contract AUTO_INCREMENT=19;
 
 -- Réactivation des contraintes de clés étrangères
 SET FOREIGN_KEY_CHECKS = 1;

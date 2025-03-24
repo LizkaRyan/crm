@@ -3,7 +3,7 @@ CREATE TABLE budget
     id_budget   INT AUTO_INCREMENT,
     name        VARCHAR(50)    NOT NULL,
     budget      DECIMAL(15, 2) NOT NULL,
-    customer_id INT            NOT NULL,
+    customer_id int unsigned   NOT NULL,
     PRIMARY KEY (id_budget),
     FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
 );

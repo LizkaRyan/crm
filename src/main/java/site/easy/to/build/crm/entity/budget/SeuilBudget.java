@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class SeuilBudget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +22,9 @@ public class SeuilBudget {
     private double tauxSeuil;
 
     private LocalDateTime dateSeuil;
+
+    public SeuilBudget(double tauxSeuil){
+        this.tauxSeuil=tauxSeuil;
+        this.dateSeuil=LocalDateTime.now();
+    }
 }

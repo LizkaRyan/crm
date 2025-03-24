@@ -1,6 +1,5 @@
 package site.easy.to.build.crm.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

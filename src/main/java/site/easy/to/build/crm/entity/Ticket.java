@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.mapping.ToOne;
+import site.easy.to.build.crm.entity.budget.Depense;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "trigger_ticket")
@@ -48,8 +50,8 @@ public class Ticket {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Transient
-    private Integer idBudget;
+    @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH},mappedBy = "ticket")
+    private List<Depense> depenses;
 
     public Ticket() {
     }
