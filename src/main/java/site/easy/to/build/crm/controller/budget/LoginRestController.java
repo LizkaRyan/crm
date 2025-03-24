@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import site.easy.to.build.crm.dto.LoginRequest;
 import site.easy.to.build.crm.dto.ResponseJSON;
 import site.easy.to.build.crm.entity.User;
-import site.easy.to.build.crm.service.user.UserServiceImpl;
+import site.easy.to.build.crm.service.user.UserService;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class LoginRestController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
 
