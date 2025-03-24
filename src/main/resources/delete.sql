@@ -10,7 +10,6 @@ TRUNCATE TABLE `employee`;
 TRUNCATE TABLE `user_roles`;
 TRUNCATE TABLE `roles`;
 TRUNCATE TABLE `user_profile`;
-TRUNCATE TABLE `oauth_users`;
 delete from `users` where id != 52;
 
 ALTER TABLE users AUTO_INCREMENT=53;

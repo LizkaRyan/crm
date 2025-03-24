@@ -29,5 +29,12 @@ public class SumDepenseValidator implements ConstraintValidator<SumDepense, Depe
             return false;
         }
         return true;
+
+//        Double sumBudget = budgetService.findSumBudgetCustomer(depenseDTO.getCustomerId());
+//        Double sumDepense = depenseService.findSumDepenseByCustomerId(depenseDTO.getCustomerId());
+//        if(sumDepense+depenseDTO.getAmount()>sumBudget){
+//            return false;
+//        }
+//        return true;
     }
 }

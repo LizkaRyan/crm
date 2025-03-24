@@ -30,6 +30,10 @@ public class BudgetService {
         return budgetRepository.findById(budgetId).orElseThrow(()->new RuntimeException(budgetId+" budget not found"));
     }
 
+    public Double findSumBudgetCustomer(Integer customerId){
+        return budgetRepository.findSumBudgetByIdCustomer(customerId).orElse(0d);
+    }
+
     public Double findSumBudget() {
         return budgetRepository.findSumBudget().orElse(0d);
     }

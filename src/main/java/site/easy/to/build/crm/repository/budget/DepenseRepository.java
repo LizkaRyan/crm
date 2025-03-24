@@ -90,4 +90,15 @@ public interface DepenseRepository extends JpaRepository<Depense,Long> {
 
     @Query("select sum(d.amount) from Depense d")
     Optional<Double> findSumDepense();
+
+    @Query("""
+            select sum(d.amount) from Depense d
+            left join d.ticket t
+            left join d.lead l
+            where 
+            l.customer.customerId = :customerId
+            or
+            t.customer.customerId = :customerId
+            """)
+    Optional<Double> findSumDepenseByCustomerId(@Param("customerId") Integer customerId);
 }

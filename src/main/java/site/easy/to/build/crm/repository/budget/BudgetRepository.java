@@ -13,6 +13,9 @@ public interface BudgetRepository extends JpaRepository<Budget,Long> {
     @Query("select b from Budget b where b.customer.customerId = :idCustomer")
     List<Budget> findBudgetByIdCustomer(@Param("idCustomer")Integer idCustomer);
 
+    @Query("select sum(b.budget) from Budget b where b.customer.customerId = :idCustomer")
+    Optional<Double> findSumBudgetByIdCustomer(@Param("idCustomer")Integer idCustomer);
+
     @Query("select sum(b.budget) from Budget b")
     Optional<Double> findSumBudget();
 }
