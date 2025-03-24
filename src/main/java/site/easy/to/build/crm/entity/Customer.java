@@ -2,12 +2,14 @@ package site.easy.to.build.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.groups.Default;
 import site.easy.to.build.crm.customValidations.customer.UniqueEmail;
 import site.easy.to.build.crm.entity.budget.Budget;
+import site.easy.to.build.crm.util.POV;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,10 +22,12 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
+    @JsonView(POV.Public.class)
     private Integer customerId;
 
     @Column(name = "name")
     @NotBlank(message = "Name is required", groups = {Default.class, CustomerUpdateValidationGroupInclusion.class})
+    @JsonView(POV.Public.class)
     private String name;
 
     @Column(name = "email")
@@ -39,15 +43,19 @@ public class Customer {
     private String phone;
 
     @Column(name = "address")
+    @JsonView(POV.Public.class)
     private String address;
 
     @Column(name = "city")
+    @JsonView(POV.Public.class)
     private String city;
 
     @Column(name = "state")
+    @JsonView(POV.Public.class)
     private String state;
 
     @Column(name = "country")
+    @JsonView(POV.Public.class)
     @NotBlank(message = "Country is required", groups = {Default.class, CustomerUpdateValidationGroupInclusion.class})
     private String country;
 

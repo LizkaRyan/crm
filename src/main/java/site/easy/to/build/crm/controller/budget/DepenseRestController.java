@@ -30,20 +30,19 @@ public class DepenseRestController {
         return new ResponseJSON<Depense>(200,"Suppression réussie");
     }
 
-    @GetMapping("/statistique")
-    public ResponseJSON<HashMap<String, Object>> getStat(){
-        HashMap<String, Object> map=new HashMap<>();
-        map.put("totalDepense",depenseService.findSumDepenseEachCustomer());
-        map.put("totalTicketDepense",depenseService.findSumDepenseTicketEachCustomer());
-        map.put("totalLeadDepense",depenseService.findSumDepenseLeadEachCustomer());
-        map.put("depenseSumGroupBy",this.depenseService.findSumDepenseGroupby());
-        map.put("sumDepenseBudget",this.depenseService.findSumBudgetAndDepense());
-        return new ResponseJSON<>(200,"Requête réussie",map);
-    }
-
     @GetMapping("/ticket/{customerId}")
     public ResponseJSON<List<DepenseCause>> findDepenseTicketByIdCustomer(@PathVariable("customerId")Integer customerId){
         return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseTicketByCustomerId(customerId));
+    }
+
+    @GetMapping("/ticket")
+    public ResponseJSON<List<DepenseCause>> findDepenseTicket(){
+        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseTicket());
+    }
+
+    @GetMapping("/lead")
+    public ResponseJSON<List<DepenseCause>> findDepenseLead(){
+        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseLead());
     }
 
     @GetMapping("/lead/{customerId}")
