@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.dto.DepenseDTO;
 import site.easy.to.build.crm.dto.SumChart;
@@ -66,6 +67,9 @@ public class DepenseController {
         }
         model.addAttribute("redirection", "/depense/ticket");
         model.addAttribute("depense", new DepenseDTO());
+
+        // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
+
         model.addAttribute("budgets", budgetService.findByCustomerId(ticket.getCustomer().getCustomerId()));
         return "depense/form";
     }
@@ -78,21 +82,28 @@ public class DepenseController {
         }
         model.addAttribute("redirection", "/depense/lead");
         model.addAttribute("depense", new DepenseDTO());
+
+        // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
+
         model.addAttribute("budgets", budgetService.findByCustomerId(lead.getCustomer().getCustomerId()));
         return "depense/form";
     }
 
     @PostMapping("/ticket")
-    public String insertDepenseAndTicket(HttpSession session, @ModelAttribute DepenseDTO depenseDTO) {
+    public String insertDepenseAndTicket(HttpSession session,
+                                         @Validated @ModelAttribute("depense") DepenseDTO depenseDTO,
+                                         BindingResult bindingResult,
+                                         Model model) {
         Ticket ticket = (Ticket) session.getAttribute("ticket");
         if (ticket == null || depenseDTO == null) {
             return "error/500";
         }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("budgets",budgetService.findByCustomerId(ticket.getCustomer().getCustomerId()));
+            return "depense/form";
+        }
         Budget budget = budgetService.findById(depenseDTO.getIdBudget());
         SumChart sumDepense = depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
-        if (budget.getBudget() < sumDepense.getSum() + depenseDTO.getAmount()) {
-            return "montant invalide";
-        }
         if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/ticket";

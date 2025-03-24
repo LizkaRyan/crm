@@ -42,6 +42,10 @@ public class DepenseService {
         return depenseRepository.findSumDepenseOnBudgetId(idBudget).orElse(new SumChart());
     }
 
+    public Double findSumDepenseByCustomerId(Integer customerId){
+        return depenseRepository.findSumDepenseByCustomerId(customerId).orElse(0d);
+    }
+
     public Depense findDepense(Long idBudget){
         return depenseRepository.findById(idBudget).orElseThrow(()->new RuntimeException("Id not recognized"));
     }
