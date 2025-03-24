@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.entity.budget.SeuilBudget;
 import site.easy.to.build.crm.repository.budget.SeuilBudgetRepo;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class SeuilBudgetService {
@@ -13,5 +15,9 @@ public class SeuilBudgetService {
 
     public SeuilBudget findActualSeuilBudget(){
         return seuilBudgetRepo.findActualSeuilBudget().orElseThrow(()->new RuntimeException("Il n'y a pas encore de seuil dans la base de données"));
+    }
+
+    public SeuilBudget save(SeuilBudget seuilBudget){
+        return seuilBudgetRepo.save(seuilBudget);
     }
 }
