@@ -29,6 +29,14 @@ public class DepenseService {
         return depenseRepository.findDepenseByCustomerId(customerId);
     }
 
+    public List<DepenseCause> findDepenseTicket(){
+        return depenseRepository.findDepenseTicket();
+    }
+
+    public List<DepenseCause> findDepenseLead(){
+        return depenseRepository.findDepenseLead();
+    }
+
     public List<DepenseCause> findDepenseCauseByCustomerId(Integer customerId){
         List<DepenseCause> depenseCauses=depenseRepository.findDepenseCauseByCustomerId(customerId);
         return depenseCauses;

@@ -94,4 +94,9 @@ public class LeadServiceImpl implements LeadService {
     public long countByCustomerId(int customerId) {
         return leadRepository.countByCustomerCustomerId(customerId);
     }
+
+    @Override
+    public Integer findCountLead(){
+        return leadRepository.findCountLead().orElse(0);
+    }
 }

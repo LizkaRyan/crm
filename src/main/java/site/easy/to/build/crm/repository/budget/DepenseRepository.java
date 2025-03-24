@@ -61,6 +61,24 @@ public interface DepenseRepository extends JpaRepository<Depense,Long> {
             from Depense d
             left join d.lead l
             left join d.ticket t
+            where not d.ticket is null
+            """)
+    List<DepenseCause> findDepenseTicket();
+
+    @Query("""
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
+            from Depense d
+            left join d.lead l
+            left join d.ticket t
+            where not d.lead is null
+            """)
+    List<DepenseCause> findDepenseLead();
+
+    @Query("""
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
+            from Depense d
+            left join d.lead l
+            left join d.ticket t
             where not d.lead is null and d.budget.customer.customerId = :customerId
             """)
     List<DepenseCause> findDepenseLeadByCustomerId(@Param("customerId")Integer customerId);
