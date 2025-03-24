@@ -1,14 +1,13 @@
 package site.easy.to.build.crm.controller.budget;
 
 import jakarta.servlet.http.HttpSession;
-import jdk.jfr.Frequency;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.dto.DepenseDTO;
-import site.easy.to.build.crm.dto.SumDepense;
+import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.CustomerLoginInfo;
 import site.easy.to.build.crm.entity.Lead;
@@ -19,7 +18,6 @@ import site.easy.to.build.crm.google.model.gmail.Attachment;
 import site.easy.to.build.crm.service.budget.BudgetService;
 import site.easy.to.build.crm.service.budget.DepenseService;
 import site.easy.to.build.crm.service.budget.SeuilBudgetService;
-import site.easy.to.build.crm.service.contract.ContractService;
 import site.easy.to.build.crm.service.customer.CustomerLoginInfoService;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.lead.LeadService;
@@ -89,7 +87,7 @@ public class DepenseController {
             return "error/500";
         }
         Budget budget=budgetService.findById(depenseDTO.getIdBudget());
-        SumDepense sumDepense=depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumDepense=depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
         if(budget.getBudget()<sumDepense.getSum()+depenseDTO.getAmount()){
             return "montant invalide";
         }
@@ -110,7 +108,7 @@ public class DepenseController {
             return "error/500";
         }
         Budget budget=budgetService.findById(depenseDTO.getIdBudget());
-        SumDepense sumDepense=depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumDepense=depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
         if(budget.getBudget()<sumDepense.getSum()+depenseDTO.getAmount()){
             return "montant invalide";
         }
