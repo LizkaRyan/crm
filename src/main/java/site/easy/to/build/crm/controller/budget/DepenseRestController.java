@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.ResponseJSON;
-import site.easy.to.build.crm.dto.SumDepenseCustomer;
 import site.easy.to.build.crm.entity.budget.Depense;
+import site.easy.to.build.crm.service.budget.BudgetService;
 import site.easy.to.build.crm.service.budget.DepenseService;
 
 import java.util.HashMap;
@@ -31,11 +31,13 @@ public class DepenseRestController {
     }
 
     @GetMapping("/statistique")
-    public ResponseJSON<HashMap<String, List<SumDepenseCustomer>>> getStat(){
-        HashMap<String, List<SumDepenseCustomer>> map=new HashMap<>();
+    public ResponseJSON<HashMap<String, Object>> getStat(){
+        HashMap<String, Object> map=new HashMap<>();
         map.put("totalDepense",depenseService.findSumDepenseEachCustomer());
         map.put("totalTicketDepense",depenseService.findSumDepenseTicketEachCustomer());
         map.put("totalLeadDepense",depenseService.findSumDepenseLeadEachCustomer());
+        map.put("depenseSumGroupBy",this.depenseService.findSumDepenseGroupby());
+        map.put("sumDepenseBudget",this.depenseService.findSumBudgetAndDepense());
         return new ResponseJSON<>(200,"Requête réussie",map);
     }
 

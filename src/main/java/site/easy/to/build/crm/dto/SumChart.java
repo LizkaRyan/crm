@@ -5,16 +5,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SumDepense {
+public class SumChart {
     Double sum;
     String budgetName;
 
-    public SumDepense(Double sum,String budgetName){
+    public SumChart(Double sum, String budgetName){
         this.sum=sum;
         this.budgetName=budgetName;
     }
 
-    public SumDepense(){
+    public SumChart(){
         this.sum=0d;
     }
 }

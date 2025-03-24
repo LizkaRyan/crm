@@ -29,4 +29,8 @@ public class BudgetService {
     public Budget findById(Long budgetId){
         return budgetRepository.findById(budgetId).orElseThrow(()->new RuntimeException(budgetId+" budget not found"));
     }
+
+    public Double findSumBudget() {
+        return budgetRepository.findSumBudget().orElse(0d);
+    }
 }
