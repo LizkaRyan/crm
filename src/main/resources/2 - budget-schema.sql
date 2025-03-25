@@ -3,7 +3,7 @@ CREATE TABLE budget
     id_budget   INT AUTO_INCREMENT,
     name        VARCHAR(50)    NOT NULL,
     budget      DECIMAL(15, 2) NOT NULL,
-    customer_id int unsigned   NOT NULL,
+    customer_id int unsigned NOT NULL,
     PRIMARY KEY (id_budget),
     FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
 );
@@ -29,4 +29,14 @@ CREATE TABLE seuil_budget
     PRIMARY KEY (id_seuil_budget)
 );
 
-INSERT INTO seuil_budget(taux_seuil,date_seuil) values(60,'2024-10-10 10:10');
+CREATE TABLE token_api
+(
+    id_token_api    INT AUTO_INCREMENT,
+    token           VARCHAR(100) NOT NULL,
+    date_expiration DATETIME     NOT NULL,
+    PRIMARY KEY (id_token_api),
+    UNIQUE (token)
+);
+
+INSERT INTO seuil_budget(taux_seuil, date_seuil)
+values (60, '2024-10-10 10:10');
