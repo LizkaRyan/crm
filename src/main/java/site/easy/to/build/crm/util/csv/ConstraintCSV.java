@@ -27,7 +27,11 @@ public final class ConstraintCSV {
 
     public static final LocalDateTimeConstraint LOCALDATE_TIME = new LocalDateTimeConstraint();
 
-    public static class LongPositive implements CellCSV<Long>{
+    public static final StatusConstraint STATUS_CONSTRAINT=new StatusConstraint();
+
+    public static final TypeConstraint TYPE_CONSTRAINT=new TypeConstraint();
+
+    private static class LongPositive implements CellCSV<Long>{
 
         @Override
         public Long getValue(String cell,int line) throws CSVException {
@@ -44,7 +48,27 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class IntPositive implements CellCSV<Integer>{
+    private static class StatusConstraint implements CellCSV<String>{
+        @Override
+        public String getValue(String cell,int line) throws CSVException {
+            if(cell.equals("meeting-to-schedule") || cell.equals("assign-to-sales") || cell.equals("archived") || cell.equals("success")){
+                return cell;
+            }
+            throw new CSVException("Status: "+cell+" not found in line "+line);
+        }
+    }
+
+    private static class TypeConstraint implements CellCSV<String>{
+        @Override
+        public String getValue(String cell,int line) throws CSVException {
+            if(cell.equals("lead") || cell.equals("ticket")){
+                return cell;
+            }
+            throw new CSVException("Type: "+cell+" not found in line "+line);
+        }
+    }
+
+    private static class IntPositive implements CellCSV<Integer>{
 
         @Override
         public Integer getValue(String cell,int line) throws CSVException {
@@ -61,7 +85,7 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class TimeConstraint implements CellCSV<LocalTime>{
+    private static class TimeConstraint implements CellCSV<LocalTime>{
 
         @Override
         public LocalTime getValue(String cell,int line) throws CSVException {
@@ -75,7 +99,7 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class LocalDateTimeConstraint implements CellCSV<LocalDateTime>{
+    private static class LocalDateTimeConstraint implements CellCSV<LocalDateTime>{
 
         @Override
         public LocalDateTime getValue(String cell,int line) throws CSVException {
@@ -89,12 +113,12 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class DoublePositive implements CellCSV<Double>{
+    private static class DoublePositive implements CellCSV<Double>{
 
         @Override
         public Double getValue(String cell,int line) throws CSVException {
             try{
-                Double value=Double.parseDouble(cell);
+                Double value=Double.parseDouble(cell.replace(",","."));
                 if(value<0){
                     throw new CSVException("Valeur négative sur la ligne "+line);
                 }
@@ -106,7 +130,7 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class LocalDateConstraint implements CellCSV<LocalDate>{
+    private static class LocalDateConstraint implements CellCSV<LocalDate>{
 
         @Override
         public LocalDate getValue(String cell,int line) throws CSVException {
@@ -121,7 +145,7 @@ public final class ConstraintCSV {
         }
     }
 
-    public static class ListForeign implements CellCSV<List<String>>{
+    private static class ListForeign implements CellCSV<List<String>>{
 
         @Override
         public List<String> getValue(String cell,int line) throws CSVException {
