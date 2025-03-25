@@ -3,13 +3,13 @@ package site.easy.to.build.crm.customValidations.budget;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import site.easy.to.build.crm.dto.DepenseDTO;
+import site.easy.to.build.crm.dto.ExpenseDTO;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.entity.budget.Budget;
 import site.easy.to.build.crm.service.budget.BudgetService;
 import site.easy.to.build.crm.service.budget.ExpenseService;
 
-public class SumDepenseValidator implements ConstraintValidator<SumDepense, DepenseDTO> {
+public class SumDepenseValidator implements ConstraintValidator<SumDepense, ExpenseDTO> {
 
     private final ExpenseService expenseService;
 
@@ -22,19 +22,12 @@ public class SumDepenseValidator implements ConstraintValidator<SumDepense, Depe
     }
 
     @Override
-    public boolean isValid(DepenseDTO depenseDTO, ConstraintValidatorContext constraintValidatorContext) {
-        SumChart sumChart = expenseService.findSumDepense(depenseDTO.getIdBudget());
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        if(sumChart.getSum()+depenseDTO.getAmount()>budget.getBudget()){
+    public boolean isValid(ExpenseDTO depenseDTO, ConstraintValidatorContext constraintValidatorContext) {
+        Double sumBudget = budgetService.findSumBudgetCustomer(depenseDTO.getCustomerId());
+        Double sumDepense = expenseService.findSumDepenseByCustomerId(depenseDTO.getCustomerId());
+        if(sumDepense+depenseDTO.getAmount()>sumBudget){
             return false;
         }
         return true;
-
-//        Double sumBudget = budgetService.findSumBudgetCustomer(depenseDTO.getCustomerId());
-//        Double sumDepense = depenseService.findSumDepenseByCustomerId(depenseDTO.getCustomerId());
-//        if(sumDepense+depenseDTO.getAmount()>sumBudget){
-//            return false;
-//        }
-//        return true;
     }
 }

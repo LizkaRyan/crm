@@ -17,7 +17,7 @@ public interface ExpenseRepository extends JpaRepository<Expense,Long> {
     List<Expense> findDepenseByCustomerId(@Param("idCustomer")Integer idCustomer);
 
     @Query("select new site.easy.to.build.crm.dto.SumChart(sum(d.amount),d.customer.name) from Expense d where d.customer.customerId = :idCustomer group by d.customer.name,d.customer.customerId")
-    Optional<SumChart> findSumDepenseByIdCustomer(@Param("idCustomer")Long idCustomer);
+    Optional<SumChart> findSumDepenseByIdCustomer(@Param("idCustomer")Integer idCustomer);
 
     @Query("""
             select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.customer.name,d.customer.customerId)
