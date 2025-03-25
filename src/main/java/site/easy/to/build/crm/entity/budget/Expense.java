@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.entity.budget;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
+import site.easy.to.build.crm.util.POV;
 
 @Entity
 @NoArgsConstructor
@@ -15,8 +17,10 @@ import site.easy.to.build.crm.entity.Ticket;
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(POV.Public.class)
     private Long idExpense;
 
+    @JsonView(POV.Public.class)
     private double amount;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})

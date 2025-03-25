@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.service.budget;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.DepenseCause;
@@ -8,6 +9,8 @@ import site.easy.to.build.crm.dto.SumDepenseCustomer;
 import site.easy.to.build.crm.dto.csv.ExpenseCsv;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.budget.Expense;
+import site.easy.to.build.crm.entity.budget.SeuilBudget;
+import site.easy.to.build.crm.exception.SeuilDepasseException;
 import site.easy.to.build.crm.repository.budget.ExpenseRepository;
 import site.easy.to.build.crm.util.csv.exception.CellCSVException;
 import site.easy.to.build.crm.util.csv.exception.CsvException;
@@ -22,6 +25,8 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
 
     private final BudgetService budgetService;
+
+    private final SeuilBudgetService seuilBudgetService;
 
     public Expense save(Expense expense){
         return expenseRepository.save(expense);
@@ -56,14 +61,25 @@ public class ExpenseService {
         return expenseRepository.findSumDepenseByCustomerId(customerId).orElse(0d);
     }
 
-    public Expense findDepense(Long idBudget){
-        return expenseRepository.findById(idBudget).orElseThrow(()->new RuntimeException("Id not recognized"));
+    public Expense findDepense(Long idDepense){
+        return expenseRepository.findById(idDepense).orElseThrow(()->new RuntimeException("Id not recognized"));
     }
 
-    public Expense update(Long idDepense, double amount){
-        Expense expense =findDepense(idDepense);
+    public Expense update(Long idDepense, double amount)throws SeuilDepasseException{
+        Expense expense = findDepense(idDepense);
+        double varChange=expense.getAmount()-amount;
+        if(varChange>=0){
+            expense.setAmount(amount);
+            return this.expenseRepository.save(expense);
+        }
         expense.setAmount(amount);
-        return this.expenseRepository.save(expense);
+        Double sumBudget=budgetService.findSumBudgetCustomer(expense.getCustomer().getCustomerId());
+        SeuilBudget seuilBudget=seuilBudgetService.findActualSeuilBudget();
+        SumChart sumExpense=expenseRepository.findSumDepenseByIdCustomer(expense.getCustomer().getCustomerId()).orElse(new SumChart());
+        if(sumExpense.getSum()-varChange<=(sumBudget*seuilBudget.getTauxSeuil()/100)){
+            return this.expenseRepository.save(expense);
+        }
+        throw new SeuilDepasseException(expense);
     }
 
     public void delete(Long idDepense){
