@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.util.csv;
 
+import lombok.Getter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -9,7 +10,6 @@ import site.easy.to.build.crm.util.csv.parameter.CellCSV;
 import site.easy.to.build.crm.util.csv.parameter.SetterCSV;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -17,24 +17,29 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CSVFile<T> {
+public abstract class CSVFile<T> {
     MultipartFile file;
 
     List<HeaderCSV> headerCSVs;
 
+    String fileName;
+
     String separation;
 
+    @Getter
     List<T> data=new ArrayList<>();
 
+    @Getter
     List<String> errors=new ArrayList<>();
 
     public CSVFile(MultipartFile multipartFile,String separation) {
         this.file=multipartFile;
+        this.fileName= multipartFile.getOriginalFilename();
         this.separation=separation;
         this.headerCSVs=new ArrayList<>();
     }
 
-    public void readAndTransform(SetterCSV<T> setterCSV) {
+    protected void readAndTransform(SetterCSV<T> setterCSV) {
         try (
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(this.file.getInputStream(), StandardCharsets.UTF_8)
@@ -51,7 +56,7 @@ public class CSVFile<T> {
             List<String> headers = csvParser.getHeaderNames();
             setHeaders(headers);
 
-            int line=0;
+            int line=2;
             // Iterate through the CSV records
             for (CSVRecord record : csvParser) {
                 try{
@@ -60,7 +65,7 @@ public class CSVFile<T> {
                     this.data.add(object);
                 }
                 catch (Exception ex){
-                    this.errors.add(ex.getMessage());
+                    this.errors.add(ex.getMessage()+" :"+fileName);
                 }
                 line++;
                 System.out.println();
@@ -81,6 +86,13 @@ public class CSVFile<T> {
             }
         }
         return lineValues;
+    }
+
+    public boolean hasError(){
+        if(data.size()!=0 && errors.size()==0){
+            return false;
+        }
+        return true;
     }
 
     private void setHeaders(List<String> headers){
@@ -117,4 +129,6 @@ public class CSVFile<T> {
         this.headerCSVs.add(new HeaderCSV(header, constraintColumn));
         return this;
     }
+
+    public abstract void read();
 }

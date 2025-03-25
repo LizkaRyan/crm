@@ -33,6 +33,7 @@
                     </a>
                     <ul class="collapse">
                         <li><a th:href="${'/delete'}">Delete all data</a></li>
+                        <li><a th:href="${'/csv/form'}">Import CSV</a></li>
                         <li><a th:href="${home + 'employee/settings/google-services'}">Google setting</a></li>
                         <li>
                             <a href="javascript:void(0)" class="has-arrow">Notification setting</a>
@@ -62,7 +63,7 @@
                         <span class="hide-menu">Depenses</span>
                     </a>
                     <ul class="collapse">
-                        <li><a th:href="${'/depense'}">Liste budgets</a></li>
+                        <li><a th:href="${'/expense'}">Liste budgets</a></li>
                     </ul>
                 </li>
                 <li class="nav-small-cap">--- Import</li>
@@ -219,7 +220,7 @@
                         <span class="hide-menu">Depense</span>
                     </a>
                     <ul class="collapse">
-                        <li><a th:href="${'/depense/my-depenses'}">My Depenses</a></li>
+                        <li><a th:href="${'/expense/my-depenses'}">My Depenses</a></li>
                     </ul>
                 </li>
                 <li>

@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.ResponseJSON;
-import site.easy.to.build.crm.entity.budget.Depense;
-import site.easy.to.build.crm.service.budget.BudgetService;
-import site.easy.to.build.crm.service.budget.DepenseService;
+import site.easy.to.build.crm.entity.budget.Expense;
+import site.easy.to.build.crm.service.budget.ExpenseService;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -16,42 +14,42 @@ import java.util.List;
 @AllArgsConstructor
 public class DepenseRestController {
 
-    private final DepenseService depenseService;
+    private final ExpenseService expenseService;
 
     @GetMapping("/update/{idDepense}/{amount}")
-    public ResponseJSON<Depense> update(@PathVariable("idDepense")Long idDepense, @PathVariable("amount")double amount){
-        Depense depense=depenseService.update(idDepense,amount);
-        return new ResponseJSON<Depense>(200,"Modification réussie",depense);
+    public ResponseJSON<Expense> update(@PathVariable("idDepense")Long idDepense, @PathVariable("amount")double amount){
+        Expense expense = expenseService.update(idDepense,amount);
+        return new ResponseJSON<Expense>(200,"Modification réussie", expense);
     }
 
     @GetMapping("/delete/{idDepense}")
-    public ResponseJSON<Depense> delete(@PathVariable("idDepense")Long idDepense){
-        depenseService.delete(idDepense);
-        return new ResponseJSON<Depense>(200,"Suppression réussie");
+    public ResponseJSON<Expense> delete(@PathVariable("idDepense")Long idDepense){
+        expenseService.delete(idDepense);
+        return new ResponseJSON<Expense>(200,"Suppression réussie");
     }
 
     @GetMapping("/ticket/{customerId}")
     public ResponseJSON<List<DepenseCause>> findDepenseTicketByIdCustomer(@PathVariable("customerId")Integer customerId){
-        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseTicketByCustomerId(customerId));
+        return new ResponseJSON<>(200,"Requête réussie", expenseService.findDepenseTicketByCustomerId(customerId));
     }
 
     @GetMapping("/ticket")
     public ResponseJSON<List<DepenseCause>> findDepenseTicket(){
-        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseTicket());
+        return new ResponseJSON<>(200,"Requête réussie", expenseService.findDepenseTicket());
     }
 
     @GetMapping("/lead")
     public ResponseJSON<List<DepenseCause>> findDepenseLead(){
-        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseLead());
+        return new ResponseJSON<>(200,"Requête réussie", expenseService.findDepenseLead());
     }
 
     @GetMapping("/lead/{customerId}")
     public ResponseJSON<List<DepenseCause>> findDepenseLeadByIdCustomer(@PathVariable("customerId")Integer customerId){
-        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseLeadByCustomerId(customerId));
+        return new ResponseJSON<>(200,"Requête réussie", expenseService.findDepenseLeadByCustomerId(customerId));
     }
 
     @GetMapping("/{customerId}")
     public ResponseJSON<List<DepenseCause>> findDepenseByIdCustomer(@PathVariable("customerId")Integer customerId){
-        return new ResponseJSON<>(200,"Requête réussie",depenseService.findDepenseCauseByCustomerId(customerId));
+        return new ResponseJSON<>(200,"Requête réussie", expenseService.findDepenseCauseByCustomerId(customerId));
     }
 }

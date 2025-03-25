@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 public class Customer {
-
     public interface CustomerUpdateValidationGroupInclusion {}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,6 +119,15 @@ public class Customer {
 
     public String getName() {
         return name;
+    }
+
+    public void setUser(List<User> users) {
+        for(User user:users){
+            if(user.getEmail().equals(this.getEmail())){
+                this.user=user;
+                break;
+            }
+        }
     }
 
     public void setName(String name) {

@@ -7,7 +7,6 @@ TRUNCATE TABLE `customer`;
 TRUNCATE TABLE `customer_login_info`;
 TRUNCATE TABLE `email_template`;
 TRUNCATE TABLE `employee`;
-TRUNCATE TABLE `user_roles`;
 TRUNCATE TABLE `roles`;
 TRUNCATE TABLE `user_profile`;
 delete from `users` where id != 52;

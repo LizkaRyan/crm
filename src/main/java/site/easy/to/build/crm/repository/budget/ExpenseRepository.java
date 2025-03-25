@@ -6,59 +6,59 @@ import org.springframework.data.repository.query.Param;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
-import site.easy.to.build.crm.entity.budget.Depense;
+import site.easy.to.build.crm.entity.budget.Expense;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface DepenseRepository extends JpaRepository<Depense,Long> {
+public interface ExpenseRepository extends JpaRepository<Expense,Long> {
 
-    @Query("select d from Depense d where d.budget.customer.customerId = :idCustomer")
-    List<Depense> findDepenseByCustomerId(@Param("idCustomer")Integer idCustomer);
+    @Query("select d from Expense d where d.customer.customerId = :idCustomer")
+    List<Expense> findDepenseByCustomerId(@Param("idCustomer")Integer idCustomer);
 
-    @Query("select new site.easy.to.build.crm.dto.SumChart(sum(d.amount),d.budget.name) from Depense d where d.budget.idBudget = :idBudget group by d.budget.name,d.budget.idBudget")
-    Optional<SumChart> findSumDepenseOnBudgetId(@Param("idBudget")Long idBudget);
+    @Query("select new site.easy.to.build.crm.dto.SumChart(sum(d.amount),d.customer.name) from Expense d where d.customer.customerId = :idCustomer group by d.customer.name,d.customer.customerId")
+    Optional<SumChart> findSumDepenseByIdCustomer(@Param("idCustomer")Long idCustomer);
 
     @Query("""
-            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.budget.customer.name,d.budget.customer.customerId) 
-            from Depense d 
+            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.customer.name,d.customer.customerId)
+            from Expense d 
             group by 
-            d.budget.customer.name,d.budget.customer.customerId
+            d.customer.name,d.customer.customerId
             """)
     List<SumDepenseCustomer> findSumDepenseEachCustomer();
 
     @Query("""
-            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.budget.customer.name,d.budget.customer.customerId)
-            from Depense d
+            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.customer.name,d.customer.customerId)
+            from Expense d
             where
             not d.ticket is null
             group by
-            d.budget.customer.name,d.budget.customer.customerId
+            d.customer.name,d.customer.customerId
             """)
     List<SumDepenseCustomer> findSumDepenseTicketEachCustomer();
 
     @Query("""
-            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.budget.customer.name,d.budget.customer.customerId)
-            from Depense d
+            select new site.easy.to.build.crm.dto.SumDepenseCustomer(sum(d.amount),d.customer.name,d.customer.customerId)
+            from Expense d
             where
             not d.lead is null
             group by
-            d.budget.customer.name,d.budget.customer.customerId
+            d.customer.name,d.customer.customerId
             """)
     List<SumDepenseCustomer> findSumDepenseLeadEachCustomer();
 
     @Query("""
-            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
-            from Depense d
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idExpense,d.amount,t,l,d.customer.name)
+            from Expense d
             left join d.lead l
             left join d.ticket t
-            where not d.ticket is null and d.budget.customer.customerId = :customerId
+            where not d.ticket is null and d.customer.customerId = :customerId
             """)
     List<DepenseCause> findDepenseTicketByCustomerId(@Param("customerId")Integer customerId);
 
     @Query("""
-            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
-            from Depense d
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idExpense,d.amount,t,l,d.customer.name)
+            from Expense d
             left join d.lead l
             left join d.ticket t
             where not d.ticket is null
@@ -66,8 +66,8 @@ public interface DepenseRepository extends JpaRepository<Depense,Long> {
     List<DepenseCause> findDepenseTicket();
 
     @Query("""
-            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
-            from Depense d
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idExpense,d.amount,t,l,d.customer.name)
+            from Expense d
             left join d.lead l
             left join d.ticket t
             where not d.lead is null
@@ -75,42 +75,42 @@ public interface DepenseRepository extends JpaRepository<Depense,Long> {
     List<DepenseCause> findDepenseLead();
 
     @Query("""
-            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name)
-            from Depense d
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idExpense,d.amount,t,l,d.customer.name)
+            from Expense d
             left join d.lead l
             left join d.ticket t
-            where not d.lead is null and d.budget.customer.customerId = :customerId
+            where not d.lead is null and d.customer.customerId = :customerId
             """)
     List<DepenseCause> findDepenseLeadByCustomerId(@Param("customerId")Integer customerId);
 
     @Query("""
-            select new site.easy.to.build.crm.dto.DepenseCause(d.idDepense,d.amount,t,l,d.budget.customer.name) 
-            from Depense d
+            select new site.easy.to.build.crm.dto.DepenseCause(d.idExpense,d.amount,t,l,d.customer.name) 
+            from Expense d
             left join d.lead l
             left join d.ticket t
-            where d.budget.customer.customerId = :customerId
+            where d.customer.customerId = :customerId
             """)
     List<DepenseCause> findDepenseCauseByCustomerId(@Param("customerId")Integer customerId);
 
     @Query("""
             select sum(d.amount)
-            from Depense d
+            from Expense d
             where not d.ticket is null
             """)
     Optional<Double> findSumTicket();
 
     @Query("""
             select sum(d.amount)
-            from Depense d
+            from Expense d
             where not d.lead is null
             """)
     Optional<Double> findSumLead();
 
-    @Query("select sum(d.amount) from Depense d")
+    @Query("select sum(d.amount) from Expense d")
     Optional<Double> findSumDepense();
 
     @Query("""
-            select sum(d.amount) from Depense d
+            select sum(d.amount) from Expense d
             left join d.ticket t
             left join d.lead l
             where 
