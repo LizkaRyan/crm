@@ -1,11 +1,12 @@
 package site.easy.to.build.crm.dto.csv;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import site.easy.to.build.crm.dto.csv.reader.BudgetCsvReader;
-import site.easy.to.build.crm.util.csv.CSVFile;
-import site.easy.to.build.crm.util.csv.CollectionCsvFile;
+import site.easy.to.build.crm.dto.csv.reader.CustomerCsvReader;
+import site.easy.to.build.crm.dto.csv.reader.ExpenseCsvReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,59 @@ public class BudgetCustomerExpenseCsv {
     private String separatorCustomer;
     private String separatorExpense;
 
-    public CollectionCsvFile getCsvFiles(){
-        List<CSVFile<?>> csvFiles=new ArrayList<>();
-        csvFiles.add(new BudgetCsvReader(budgetFile,separatorBudget));
-        csvFiles.add(new BudgetCsvReader(customerFile,separatorCustomer));
-        csvFiles.add(new BudgetCsvReader(expenseFile,separatorExpense));
-        return new CollectionCsvFile(csvFiles);
+    @Setter(AccessLevel.PRIVATE)
+    private BudgetCsvReader budgetReader;
+
+    @Setter(AccessLevel.PRIVATE)
+    private CustomerCsvReader customerReader;
+
+    @Setter(AccessLevel.PRIVATE)
+    private ExpenseCsvReader expenseReader;
+
+    @Setter(AccessLevel.PRIVATE)
+    private boolean hasBeenRead=false;
+
+    public BudgetCsvReader getBudgetReader(){
+        if(budgetReader ==null){
+            budgetReader =new BudgetCsvReader(budgetFile,separatorBudget);
+        }
+        return budgetReader;
+    }
+
+
+    public CustomerCsvReader getCustomerReader(){
+        if(customerReader ==null){
+            customerReader =new CustomerCsvReader(customerFile,separatorCustomer);
+        }
+        return customerReader;
+    }
+
+    public ExpenseCsvReader getExpenseReader(){
+        if(expenseReader ==null){
+            expenseReader =new ExpenseCsvReader(expenseFile,separatorExpense);
+        }
+        return expenseReader;
+    }
+
+    public void read(){
+        this.getBudgetReader().read();
+        this.getCustomerReader().read();
+        this.getExpenseReader().read();
+        this.hasBeenRead=true;
+    }
+
+    public boolean hasCsvErrors(){
+        if(!hasBeenRead){
+            this.read();
+        }
+        return this.getBudgetReader().hasError() || this.getCustomerReader().hasError() || this.getCustomerReader().hasError();
+    }
+
+    public List<String> getErrors(){
+        List<String> value=new ArrayList<>();
+        value.addAll(this.getBudgetReader().getErrors());
+        value.addAll(this.getCustomerReader().getErrors());
+        value.addAll(this.getExpenseReader().getErrors());
+        return value;
     }
 }

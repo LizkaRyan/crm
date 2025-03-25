@@ -1,6 +1,6 @@
 package site.easy.to.build.crm.util.csv;
 
-import site.easy.to.build.crm.util.csv.exception.CSVException;
+import site.easy.to.build.crm.util.csv.exception.CellCSVException;
 import site.easy.to.build.crm.util.csv.parameter.CellCSV;
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class HeaderCSV {
         this.constraintColumn=constraintColumn;
     }
 
-    Object getValue(String value,int line)throws CSVException{
+    Object getValue(String value,int line)throws CellCSVException {
         return this.constraintColumn.getValue(value,line);
     }
 
@@ -49,7 +49,7 @@ public class HeaderCSV {
     public class DefaultCell implements CellCSV<String>{
 
         @Override
-        public String getValue(String value,int line) throws CSVException {
+        public String getValue(String value,int line) throws CellCSVException {
             return value;
         }
     }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
+import site.easy.to.build.crm.dto.csv.ExpenseCsv;
+import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.budget.Expense;
 import site.easy.to.build.crm.repository.budget.ExpenseRepository;
 
@@ -111,5 +113,13 @@ public class ExpenseService {
 
     public List<SumDepenseCustomer> findSumDepenseLeadEachCustomer(){
         return this.depenseRepository.findSumDepenseLeadEachCustomer();
+    }
+
+    public List<Expense> createExpense(List<ExpenseCsv> expensesCsv, List<Customer> customers){
+        List<Expense> expenses=new ArrayList<>();
+        for (ExpenseCsv expenseCsv:expensesCsv){
+            expenses.add(expenseCsv.createExpense(customers));
+        }
+        return expenses;
     }
 }

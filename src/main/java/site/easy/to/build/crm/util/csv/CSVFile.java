@@ -1,5 +1,7 @@
 package site.easy.to.build.crm.util.csv;
 
+import lombok.Data;
+import lombok.Getter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -24,8 +26,10 @@ public abstract class CSVFile<T> {
 
     String separation;
 
+    @Getter
     List<T> data=new ArrayList<>();
 
+    @Getter
     List<String> errors=new ArrayList<>();
 
     public CSVFile(MultipartFile multipartFile,String separation) {

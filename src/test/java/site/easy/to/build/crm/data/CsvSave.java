@@ -1,31 +1,25 @@
 package site.easy.to.build.crm.data;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import site.easy.to.build.crm.dto.ReservationDTO;
-import site.easy.to.build.crm.dto.csv.BudgetCsv;
 import site.easy.to.build.crm.dto.csv.BudgetCustomerExpenseCsv;
-import site.easy.to.build.crm.dto.csv.CustomerCsv;
-import site.easy.to.build.crm.dto.csv.ExpenseCsv;
-import site.easy.to.build.crm.dto.csv.reader.BudgetCsvReader;
-import site.easy.to.build.crm.dto.csv.reader.CustomerCsvReader;
-import site.easy.to.build.crm.dto.csv.reader.ExpenseCsvReader;
-import site.easy.to.build.crm.util.csv.CSVFile;
-import site.easy.to.build.crm.util.csv.ConstraintCSV;
+import site.easy.to.build.crm.service.budget.CsvService;
 
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
-public class DataTest {
+@SpringBootTest
+public class CsvSave {
+
+    @Autowired
+    private CsvService csvService;
 
     @Test
-    void importCSV()throws Exception{
+    public void saveCsv(){
         try {
             MultipartFile multipartFileBudget=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\Feuille-4.csv");
             MultipartFile multipartFileExpense=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\expense.csv");
@@ -39,8 +33,7 @@ public class DataTest {
             budgetCustomerExpenseCsv.setCustomerFile(multipartFileCustomer);
             budgetCustomerExpenseCsv.setSeparatorCustomer(",");
 
-            budgetCustomerExpenseCsv.read();
-
+            csvService.readAndInsert(budgetCustomerExpenseCsv);
 
             System.out.println("VITA");
 

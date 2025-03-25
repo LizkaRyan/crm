@@ -3,9 +3,12 @@ package site.easy.to.build.crm.service.customer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import site.easy.to.build.crm.dto.csv.CustomerCsv;
+import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,5 +64,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Integer findCountCustomer() {
         return this.customerRepository.findCountCustomer().orElse(0);
+    }
+
+    @Override
+    public List<Customer> createCustomer(List<CustomerCsv> customerCsvs) {
+        List<Customer> customers=new ArrayList<>();
+        for (CustomerCsv customerCsv:customerCsvs){
+            customers.add(customerCsv.createCustomer());
+        }
+        return customers;
     }
 }

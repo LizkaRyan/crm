@@ -17,6 +17,6 @@ public class DataController {
 
     @PostMapping
     public String importCsv(@ModelAttribute BudgetCustomerExpenseCsv budgetCustomerExpenseCsv){
-
+        return "test";
     }
 }

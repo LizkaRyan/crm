@@ -10,12 +10,12 @@ CREATE TABLE budget
 
 CREATE TABLE expense
 (
-    id_depense INT AUTO_INCREMENT,
+    id_expense INT AUTO_INCREMENT,
     amount     DECIMAL(15, 2) NOT NULL,
     ticket_id  INT unsigned,
     id_budget  INT            NOT NULL,
     lead_id    int unsigned,
-    PRIMARY KEY (id_depense),
+    PRIMARY KEY (id_expense),
     FOREIGN KEY (ticket_id) REFERENCES trigger_ticket (ticket_id),
     FOREIGN KEY (id_budget) REFERENCES budget (id_budget),
     FOREIGN KEY (lead_id) REFERENCES trigger_lead (lead_id)
