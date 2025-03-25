@@ -25,6 +25,8 @@ public class CustomerCsv {
         customer.setUser(user);
         customer.setCity("Antananarivo");
         customer.setCountry("Madagascar");
+        customer.setState("Madagascar");
+        customer.setAddress("Lot IVC 103");
 
         return customer;
     }
