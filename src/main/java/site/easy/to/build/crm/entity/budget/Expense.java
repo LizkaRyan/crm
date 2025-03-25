@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
 
@@ -14,31 +15,30 @@ import site.easy.to.build.crm.entity.Ticket;
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idDepense;
+    private Long idExpense;
 
     private double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
     @JoinColumn(name = "lead_id")
     private Lead lead;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_budget")
-    private Budget budget;
-
-    public Expense(double amount, Budget budget, Ticket ticket){
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+    public Expense(double amount, Ticket ticket,Customer customer){
         this.amount=amount;
-        this.budget=budget;
         this.ticket=ticket;
+        this.customer=customer;
     }
 
-    public Expense(double amount, Budget budget, Lead lead){
+    public Expense(double amount, Lead lead,Customer customer){
         this.amount=amount;
-        this.budget=budget;
         this.lead=lead;
+        this.customer=customer;
     }
 }

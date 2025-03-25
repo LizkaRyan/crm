@@ -4,11 +4,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.csv.CustomerCsv;
+import site.easy.to.build.crm.dto.csv.entity.CustomerUser;
+import site.easy.to.build.crm.entity.Role;
 import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -67,11 +70,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> createCustomer(List<CustomerCsv> customerCsvs) {
+    public CustomerUser createCustomer(List<CustomerCsv> customerCsvs, Role role) {
         List<Customer> customers=new ArrayList<>();
+        List<User> users=new ArrayList<>();
         for (CustomerCsv customerCsv:customerCsvs){
-            customers.add(customerCsv.createCustomer());
+            Customer customer=customerCsv.createCustomer();
+
+            User user=customer.getUser();
+            user.setRoles(Arrays.asList(role));
+            user.setStatus("active");
+
+            customers.add(customer);
+            users.add(user);
         }
-        return customers;
+        return new CustomerUser(customers,users);
+    }
+
+    public List<Customer> saveAll(List<Customer> customers){
+        return this.customerRepository.saveAll(customers);
     }
 }

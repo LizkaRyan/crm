@@ -33,6 +33,7 @@ public class BudgetCsv {
         if(budget.getCustomer()==null){
             throw new CellCSVException("Customer: "+customerEmail+" not found on line "+(i+1));
         }
+        budget.setName("Budget for: "+budget.getCustomer().getName());
         budget.setBudget(this.getBudget());
         return budget;
     }

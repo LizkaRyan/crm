@@ -23,7 +23,7 @@ public class SumDepenseValidator implements ConstraintValidator<SumDepense, Depe
 
     @Override
     public boolean isValid(DepenseDTO depenseDTO, ConstraintValidatorContext constraintValidatorContext) {
-        SumChart sumChart = expenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumChart = expenseService.findSumDepense(depenseDTO.getIdBudget());
         Budget budget = budgetService.findById(depenseDTO.getIdBudget());
         if(sumChart.getSum()+depenseDTO.getAmount()>budget.getBudget()){
             return false;

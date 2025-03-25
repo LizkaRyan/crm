@@ -58,4 +58,8 @@ public class BudgetService {
         }
         return budgets;
     }
+
+    public List<Budget> saveAll(List<Budget> budgets){
+        return this.budgetRepository.saveAll(budgets);
+    }
 }

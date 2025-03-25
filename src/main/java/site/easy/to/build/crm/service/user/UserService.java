@@ -24,4 +24,5 @@ public interface UserService {
 
     public void deleteAllUselessData();
 
+    List<User> saveAll(List<User> users);
 }

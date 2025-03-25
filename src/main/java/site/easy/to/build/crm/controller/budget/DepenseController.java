@@ -103,13 +103,13 @@ public class DepenseController {
             return "depense/form";
         }
         Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = expenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumDepense = expenseService.findSumDepense(depenseDTO.getIdBudget());
         if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/ticket";
         }
         ticket = ticketService.save(ticket);
-        Expense expense = new Expense(depenseDTO.getAmount(), budget, ticket);
+        Expense expense = new Expense(depenseDTO.getAmount(), ticket,ticket.getCustomer());
         expenseService.save(expense);
         return "redirect:/depense";
     }
@@ -128,7 +128,7 @@ public class DepenseController {
             return "depense/form";
         }
         Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = expenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumDepense = expenseService.findSumDepense(depenseDTO.getIdBudget());
         if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/lead";
@@ -144,7 +144,7 @@ public class DepenseController {
             fileUtil.saveGoogleDriveFiles(authentication, allFiles, folderId, createdLead);
         }
 
-        Expense expense = new Expense(depenseDTO.getAmount(), budgetService.findById(depenseDTO.getIdBudget()), createdLead);
+        Expense expense = new Expense(depenseDTO.getAmount(), createdLead,createdLead.getCustomer());
         expenseService.save(expense);
 
         session.setAttribute("lead", null);
@@ -163,8 +163,7 @@ public class DepenseController {
             return "error/500";
         }
         ticket = ticketService.save(ticket);
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        Expense expense = new Expense(depenseDTO.getAmount(), budget, ticket);
+        Expense expense = new Expense(depenseDTO.getAmount(), ticket,ticket.getCustomer());
         expenseService.save(expense);
         return "redirect:/depense";
     }
@@ -183,7 +182,7 @@ public class DepenseController {
             fileUtil.saveGoogleDriveFiles(authentication, allFiles, folderId, createdLead);
         }
 
-        Expense expense = new Expense(depenseDTO.getAmount(), budgetService.findById(depenseDTO.getIdBudget()), createdLead);
+        Expense expense = new Expense(depenseDTO.getAmount(), createdLead,createdLead.getCustomer());
         expenseService.save(expense);
 
         session.setAttribute("lead", null);
