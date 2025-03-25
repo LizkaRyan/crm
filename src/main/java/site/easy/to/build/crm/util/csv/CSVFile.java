@@ -1,6 +1,5 @@
 package site.easy.to.build.crm.util.csv;
 
-import lombok.Data;
 import lombok.Getter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -11,7 +10,6 @@ import site.easy.to.build.crm.util.csv.parameter.CellCSV;
 import site.easy.to.build.crm.util.csv.parameter.SetterCSV;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,6 +22,8 @@ public abstract class CSVFile<T> {
 
     List<HeaderCSV> headerCSVs;
 
+    String fileName;
+
     String separation;
 
     @Getter
@@ -34,6 +34,7 @@ public abstract class CSVFile<T> {
 
     public CSVFile(MultipartFile multipartFile,String separation) {
         this.file=multipartFile;
+        this.fileName= multipartFile.getOriginalFilename();
         this.separation=separation;
         this.headerCSVs=new ArrayList<>();
     }
@@ -55,7 +56,7 @@ public abstract class CSVFile<T> {
             List<String> headers = csvParser.getHeaderNames();
             setHeaders(headers);
 
-            int line=1;
+            int line=2;
             // Iterate through the CSV records
             for (CSVRecord record : csvParser) {
                 try{
@@ -64,7 +65,7 @@ public abstract class CSVFile<T> {
                     this.data.add(object);
                 }
                 catch (Exception ex){
-                    this.errors.add(ex.getMessage());
+                    this.errors.add(ex.getMessage()+" :"+fileName);
                 }
                 line++;
                 System.out.println();

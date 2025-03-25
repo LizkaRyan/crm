@@ -1,7 +1,10 @@
 package site.easy.to.build.crm.util.csv.exception;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class CsvException extends Exception{
     List<String> errors;
 
