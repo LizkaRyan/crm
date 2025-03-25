@@ -48,7 +48,7 @@ public class ExpenseService {
         return expenseRepository.findAll();
     }
 
-    public SumChart findSumDepense(Long idCustomer){
+    public SumChart findSumDepense(Integer idCustomer){
         return expenseRepository.findSumDepenseByIdCustomer(idCustomer).orElse(new SumChart());
     }
 

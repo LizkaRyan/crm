@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/depense")
 @AllArgsConstructor
-public class DepenseRestController {
+public class ExpenseRestController {
 
     private final ExpenseService expenseService;
 

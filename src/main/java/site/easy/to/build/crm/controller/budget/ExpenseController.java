@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import site.easy.to.build.crm.dto.DepenseDTO;
+import site.easy.to.build.crm.dto.ExpenseDTO;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.CustomerLoginInfo;
@@ -33,7 +33,7 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/depense")
-public class DepenseController {
+public class ExpenseController {
     private final ExpenseService expenseService;
 
     private final BudgetService budgetService;
@@ -66,7 +66,7 @@ public class DepenseController {
             return "error/500";
         }
         model.addAttribute("redirection", "/depense/ticket");
-        model.addAttribute("depense", new DepenseDTO());
+        model.addAttribute("expense", new ExpenseDTO());
 
         // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
 
@@ -81,17 +81,15 @@ public class DepenseController {
             return "error/500";
         }
         model.addAttribute("redirection", "/depense/lead");
-        model.addAttribute("depense", new DepenseDTO());
+        model.addAttribute("expense", new ExpenseDTO());
 
         // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
-
-        model.addAttribute("budgets", budgetService.findByCustomerId(lead.getCustomer().getCustomerId()));
         return "depense/form";
     }
 
     @PostMapping("/ticket")
     public String insertDepenseAndTicket(HttpSession session,
-                                         @Validated @ModelAttribute("depense") DepenseDTO depenseDTO,
+                                         @Validated @ModelAttribute("expense") ExpenseDTO depenseDTO,
                                          BindingResult bindingResult,
                                          Model model) {
         Ticket ticket = (Ticket) session.getAttribute("ticket");
@@ -99,12 +97,11 @@ public class DepenseController {
             return "error/500";
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("budgets",budgetService.findByCustomerId(ticket.getCustomer().getCustomerId()));
             return "depense/form";
         }
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = expenseService.findSumDepense(depenseDTO.getIdBudget());
-        if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
+        Double sumBudget = budgetService.findSumBudgetCustomer(ticket.getCustomer().getCustomerId());
+        SumChart sumDepense = expenseService.findSumDepense(ticket.getCustomer().getCustomerId());
+        if ((sumBudget * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/ticket";
         }
@@ -115,7 +112,7 @@ public class DepenseController {
     }
 
     @PostMapping("/lead")
-    public String insertDepenseAndLead(HttpSession session, @ModelAttribute("depense") @Valid DepenseDTO depenseDTO
+    public String insertDepenseAndLead(HttpSession session, @ModelAttribute("expense") @Valid ExpenseDTO depenseDTO
             , BindingResult bindingResult
             , Authentication authentication
             , Model model) {
@@ -127,9 +124,9 @@ public class DepenseController {
             model.addAttribute("budgets",budgetService.findByCustomerId(lead.getCustomer().getCustomerId()));
             return "depense/form";
         }
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = expenseService.findSumDepense(depenseDTO.getIdBudget());
-        if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
+        Double sumBudget = budgetService.findSumBudgetCustomer(lead.getCustomer().getCustomerId());
+        SumChart sumDepense = expenseService.findSumDepense(lead.getCustomer().getCustomerId());
+        if ((sumBudget * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/lead";
         }
@@ -152,12 +149,12 @@ public class DepenseController {
         session.setAttribute("folderId", null);
         session.setAttribute("redirect", null);
 
-        return redirect;
+        return "redirect:/depense";
     }
 
     @GetMapping("/confirm/ticket")
     public String confirmDepenseAndTicket(HttpSession session) {
-        DepenseDTO depenseDTO = (DepenseDTO) session.getAttribute("depense");
+        ExpenseDTO depenseDTO = (ExpenseDTO) session.getAttribute("depense");
         Ticket ticket = (Ticket) session.getAttribute("ticket");
         if (ticket == null || depenseDTO == null) {
             return "error/500";
@@ -173,7 +170,7 @@ public class DepenseController {
         Lead lead = (Lead) session.getAttribute("lead");
         List<Attachment> allFiles = (List<Attachment>) session.getAttribute("allFiles");
         String folderId = (String) session.getAttribute("folderId");
-        DepenseDTO depenseDTO = (DepenseDTO) session.getAttribute("depense");
+        ExpenseDTO depenseDTO = (ExpenseDTO) session.getAttribute("depense");
 
         Lead createdLead = leadService.save(lead);
         fileUtil.saveFiles(allFiles, createdLead);
