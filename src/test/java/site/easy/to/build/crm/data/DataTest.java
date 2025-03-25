@@ -4,8 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import site.easy.to.build.crm.dto.ReservationDTO;
+import site.easy.to.build.crm.dto.csv.BudgetCsv;
 import site.easy.to.build.crm.dto.csv.CustomerCsv;
 import site.easy.to.build.crm.dto.csv.ExpenseCsv;
+import site.easy.to.build.crm.dto.csv.reader.BudgetCsvReader;
+import site.easy.to.build.crm.dto.csv.reader.CustomerCsvReader;
+import site.easy.to.build.crm.dto.csv.reader.ExpenseCsvReader;
 import site.easy.to.build.crm.util.csv.CSVFile;
 import site.easy.to.build.crm.util.csv.ConstraintCSV;
 
@@ -20,26 +24,11 @@ import java.util.List;
 public class DataTest {
 
     @Test
-    void importCSV()throws Exception{
+    void importBudgetCSV()throws Exception{
         try {
-            MultipartFile multipartFile=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\test.csv");
+            MultipartFile multipartFile=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\Feuille-4.csv");
 
-            // Exemple d'utilisation
-            CSVFile<ReservationDTO> csvFile = new CSVFile<>(multipartFile,";");
-            csvFile.addConstraint("duree", ConstraintCSV.INT_POSITIVE)
-                    .addConstraint("date",ConstraintCSV.LOCALDATE)
-                    .addConstraint("heure_debut",ConstraintCSV.LOCAL_TIME)
-                    .addConstraint("option",ConstraintCSV.LIST_FOREIGN);
-            csvFile.readAndTransform(v->
-                new ReservationDTO(
-                (String)v.get("ref"),
-                (String)v.get("espace"),
-                (String)v.get("client"),
-                (LocalDate)v.get("date"),
-                (LocalTime)v.get("heure_debut"),
-                (int)v.get("duree"),
-                (List<String>)v.get("option"))
-            );
+            BudgetCsvReader csvReader=new BudgetCsvReader(multipartFile,",");
 
             System.out.println("VITA");
 
@@ -53,22 +42,9 @@ public class DataTest {
     @Test
     void importExpenseCsv(){
         try {
-            MultipartFile multipartFile= getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\expense.csv");
-            // Exemple d'utilisation
-            CSVFile<ExpenseCsv> csvFile = new CSVFile<>(multipartFile,";");
-            csvFile.addConstraint("type", ConstraintCSV.TYPE_CONSTRAINT)
-                    .addConstraint("status",ConstraintCSV.STATUS_CONSTRAINT)
-                    .addConstraint("expense",ConstraintCSV.DOUBLE_POSITIVE);
+            MultipartFile multipartFile= getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\expense.csv");
 
-            csvFile.readAndTransform(v->
-                    new ExpenseCsv(
-                            (String)v.get("customer_email"),
-                            (String)v.get("subject_or_name"),
-                            (String)v.get("type"),
-                            (String)v.get("status"),
-                            (Double)v.get("expense")
-                    )
-            );
+            ExpenseCsvReader expenseCsv=new ExpenseCsvReader(multipartFile,";");
 
             System.out.println("VITA");
 
@@ -82,17 +58,9 @@ public class DataTest {
     @Test
     void importCustomerCsv(){
         try {
-            MultipartFile multipartFile= getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\Feuille-3.csv");
+            MultipartFile multipartFile= getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\Feuille-3.csv");
 
-            // Exemple d'utilisation
-            CSVFile<CustomerCsv> csvFile = new CSVFile<>(multipartFile,",");
-
-            csvFile.readAndTransform(v->
-                    new CustomerCsv(
-                            (String)v.get("customer_email"),
-                            (String)v.get("customer_name")
-                    )
-            );
+            CustomerCsvReader customerCsvReader=new CustomerCsvReader(multipartFile,",");
 
             System.out.println("VITA");
 

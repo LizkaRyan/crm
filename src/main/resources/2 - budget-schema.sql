@@ -8,7 +8,7 @@ CREATE TABLE budget
     FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
 );
 
-CREATE TABLE depense
+CREATE TABLE expense
 (
     id_depense INT AUTO_INCREMENT,
     amount     DECIMAL(15, 2) NOT NULL,

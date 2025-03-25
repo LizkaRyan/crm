@@ -11,7 +11,7 @@ import site.easy.to.build.crm.entity.Ticket;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Depense {
+public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDepense;
@@ -30,13 +30,13 @@ public class Depense {
     @JoinColumn(name = "id_budget")
     private Budget budget;
 
-    public Depense(double amount,Budget budget,Ticket ticket){
+    public Expense(double amount, Budget budget, Ticket ticket){
         this.amount=amount;
         this.budget=budget;
         this.ticket=ticket;
     }
 
-    public Depense(double amount,Budget budget,Lead lead){
+    public Expense(double amount, Budget budget, Lead lead){
         this.amount=amount;
         this.budget=budget;
         this.lead=lead;

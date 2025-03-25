@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.easy.to.build.crm.dto.ResponseJSON;
 import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.service.budget.DepenseService;
+import site.easy.to.build.crm.service.budget.ExpenseService;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class DashboardRestController {
 
-    private final DepenseService depenseService;
+    private final ExpenseService expenseService;
 
     private final TicketService ticketService;
 
@@ -35,11 +35,11 @@ public class DashboardRestController {
         map.put("countTicket",ticketService.findCountTicket());
         map.put("countLead",leadService.findCountLead());
         map.put("countCustomer",customerService.findCountCustomer());
-        map.put("totalDepense",depenseService.findSumDepenseEachCustomer());
-        map.put("totalTicketDepense",depenseService.findSumDepenseTicketEachCustomer());
-        map.put("totalLeadDepense",depenseService.findSumDepenseLeadEachCustomer());
-        map.put("depenseSumGroupBy",this.depenseService.findSumDepenseGroupby());
-        map.put("sumDepenseBudget",this.depenseService.findSumBudgetAndDepense());
+        map.put("totalDepense", expenseService.findSumDepenseEachCustomer());
+        map.put("totalTicketDepense", expenseService.findSumDepenseTicketEachCustomer());
+        map.put("totalLeadDepense", expenseService.findSumDepenseLeadEachCustomer());
+        map.put("depenseSumGroupBy",this.expenseService.findSumDepenseGroupby());
+        map.put("sumDepenseBudget",this.expenseService.findSumBudgetAndDepense());
         return new ResponseJSON<>(200,"Requête réussie",map);
     }
 

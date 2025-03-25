@@ -5,27 +5,25 @@ import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.dto.SumDepenseCustomer;
-import site.easy.to.build.crm.entity.budget.Depense;
-import site.easy.to.build.crm.repository.budget.DepenseRepository;
-import site.easy.to.build.crm.service.lead.LeadService;
-import site.easy.to.build.crm.service.ticket.TicketService;
+import site.easy.to.build.crm.entity.budget.Expense;
+import site.easy.to.build.crm.repository.budget.ExpenseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DepenseService {
+public class ExpenseService {
 
-    private final DepenseRepository depenseRepository;
+    private final ExpenseRepository depenseRepository;
 
     private final BudgetService budgetService;
 
-    public Depense save(Depense depense){
-        return depenseRepository.save(depense);
+    public Expense save(Expense expense){
+        return depenseRepository.save(expense);
     }
 
-    public List<Depense> findDepenseByCustomerId(Integer customerId){
+    public List<Expense> findDepenseByCustomerId(Integer customerId){
         return depenseRepository.findDepenseByCustomerId(customerId);
     }
 
@@ -42,7 +40,7 @@ public class DepenseService {
         return depenseCauses;
     }
 
-    public List<Depense> findAll() {
+    public List<Expense> findAll() {
         return depenseRepository.findAll();
     }
 
@@ -54,19 +52,19 @@ public class DepenseService {
         return depenseRepository.findSumDepenseByCustomerId(customerId).orElse(0d);
     }
 
-    public Depense findDepense(Long idBudget){
+    public Expense findDepense(Long idBudget){
         return depenseRepository.findById(idBudget).orElseThrow(()->new RuntimeException("Id not recognized"));
     }
 
-    public Depense update(Long idDepense,double amount){
-        Depense depense=findDepense(idDepense);
-        depense.setAmount(amount);
-        return this.depenseRepository.save(depense);
+    public Expense update(Long idDepense, double amount){
+        Expense expense =findDepense(idDepense);
+        expense.setAmount(amount);
+        return this.depenseRepository.save(expense);
     }
 
     public void delete(Long idDepense){
-        Depense depense=findDepense(idDepense);
-        this.depenseRepository.delete(depense);
+        Expense expense =findDepense(idDepense);
+        this.depenseRepository.delete(expense);
     }
 
     public Double findSumDepenseTicket(){

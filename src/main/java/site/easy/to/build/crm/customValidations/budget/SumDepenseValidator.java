@@ -7,23 +7,23 @@ import site.easy.to.build.crm.dto.DepenseDTO;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.entity.budget.Budget;
 import site.easy.to.build.crm.service.budget.BudgetService;
-import site.easy.to.build.crm.service.budget.DepenseService;
+import site.easy.to.build.crm.service.budget.ExpenseService;
 
 public class SumDepenseValidator implements ConstraintValidator<SumDepense, DepenseDTO> {
 
-    private final DepenseService depenseService;
+    private final ExpenseService expenseService;
 
     private final BudgetService budgetService;
 
     @Autowired
-    public SumDepenseValidator(DepenseService depenseService, BudgetService budgetService) {
-        this.depenseService = depenseService;
+    public SumDepenseValidator(ExpenseService expenseService, BudgetService budgetService) {
+        this.expenseService = expenseService;
         this.budgetService = budgetService;
     }
 
     @Override
     public boolean isValid(DepenseDTO depenseDTO, ConstraintValidatorContext constraintValidatorContext) {
-        SumChart sumChart = depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
+        SumChart sumChart = expenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
         Budget budget = budgetService.findById(depenseDTO.getIdBudget());
         if(sumChart.getSum()+depenseDTO.getAmount()>budget.getBudget()){
             return false;
