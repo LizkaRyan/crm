@@ -21,15 +21,15 @@ public class CsvSave {
     @Test
     public void saveCsv(){
         try {
-            MultipartFile multipartFileBudget=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\budget.csv");
-            MultipartFile multipartFileExpense=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\expense.csv");
-            MultipartFile multipartFileCustomer=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\customer.csv");
+            MultipartFile multipartFileBudget=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\donnee_eval_mars_2025\\java\\budget.csv");
+            MultipartFile multipartFileExpense=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\donnee_eval_mars_2025\\java\\expense.csv");
+            MultipartFile multipartFileCustomer=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\donnee_eval_mars_2025\\java\\customer.csv");
 
             BudgetCustomerExpenseCsv budgetCustomerExpenseCsv=new BudgetCustomerExpenseCsv();
             budgetCustomerExpenseCsv.setBudgetFile(multipartFileBudget);
             budgetCustomerExpenseCsv.setSeparatorBudget(",");
             budgetCustomerExpenseCsv.setExpenseFile(multipartFileExpense);
-            budgetCustomerExpenseCsv.setSeparatorExpense(";");
+            budgetCustomerExpenseCsv.setSeparatorExpense(",");
             budgetCustomerExpenseCsv.setCustomerFile(multipartFileCustomer);
             budgetCustomerExpenseCsv.setSeparatorCustomer(",");
 

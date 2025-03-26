@@ -1,9 +1,11 @@
 package site.easy.to.build.crm.service.customer;
 
+import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.csv.CustomerCsv;
 import site.easy.to.build.crm.dto.csv.entity.CustomerUser;
@@ -17,12 +19,21 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final Faker faker=new Faker();
+
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerServiceImpl(CustomerRepository customerRepository,JdbcTemplate jdbcTemplate,PasswordEncoder passwordEncoder){
+        this.customerRepository=customerRepository;
+        this.jdbcTemplate=jdbcTemplate;
+        this.passwordEncoder=passwordEncoder;
+    }
 
     @Override
     public Customer findByCustomerId(int customerId) {
@@ -76,10 +87,15 @@ public class CustomerServiceImpl implements CustomerService {
         List<User> users=new ArrayList<>();
         for (CustomerCsv customerCsv:customerCsvs){
             Customer customer=customerCsv.createCustomer();
+            customer.setCity(faker.address().cityName());
+            customer.setCountry(faker.country().name());
+            customer.setState(faker.country().capital());
+            customer.setDescription(faker.lorem().paragraph());
 
             User user=customer.getUser();
             user.setRoles(Arrays.asList(role));
             user.setStatus("active");
+            user.setPassword(passwordEncoder.encode("itu16"));
 
             customers.add(customer);
             users.add(user);

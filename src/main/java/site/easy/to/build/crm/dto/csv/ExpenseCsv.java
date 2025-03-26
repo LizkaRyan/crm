@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.dto.csv;
 
+import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +63,7 @@ public class ExpenseCsv {
         Ticket ticket=new Ticket();
         ticket.setCustomer(customer);
         ticket.setSubject(this.getSubjectOrName());
-        ticket.setStatus(this.getStatus());
+        ticket.setStatus("open");
         ticket.setPriority("high");
         return ticket;
     }
@@ -71,7 +72,7 @@ public class ExpenseCsv {
         Lead lead=new Lead();
         lead.setName(this.getSubjectOrName());
         lead.setCustomer(customer);
-        lead.setStatus(this.getStatus());
+        lead.setStatus("scheduled");
         return lead;
     }
 }

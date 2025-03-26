@@ -31,7 +31,7 @@ public class Expense {
     @JoinColumn(name = "lead_id")
     private Lead lead;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH})
     @JoinColumn(name = "customer_id")
     private Customer customer;
     public Expense(double amount, Ticket ticket,Customer customer){
