@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.groups.Default;
 import site.easy.to.build.crm.customValidations.user.UniqueEmail;
 import site.easy.to.build.crm.customValidations.user.UniqueUsername;
+import site.easy.to.build.crm.util.POV;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@JsonView(POV.Public.class)
 public class User {
     public interface ValidationGroupInclusion {}
     public interface RegistrationValidation {}
@@ -55,8 +58,10 @@ public class User {
     private LocalDate hireDate;
 
     @Column(name = "created_at")
+    @JsonView(POV.Full.class)
     private LocalDateTime createdAt;
 
+    @JsonView(POV.Full.class)
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

@@ -7,15 +7,20 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.groups.Default;
+import lombok.Getter;
+import lombok.Setter;
 import site.easy.to.build.crm.customValidations.customer.UniqueEmail;
 import site.easy.to.build.crm.entity.budget.Budget;
+import site.easy.to.build.crm.entity.budget.Expense;
 import site.easy.to.build.crm.util.POV;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "customer")
+@JsonView(POV.Public.class)
 public class Customer {
     public interface CustomerUpdateValidationGroupInclusion {}
     @Id
@@ -81,12 +86,54 @@ public class Customer {
     private CustomerLoginInfo customerLoginInfo;
 
     @Column(name = "created_at")
+    @JsonView(POV.Full.class)
     private LocalDateTime createdAt;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer")
-    private List<Budget> budgets;
+    @Setter
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "customer")
+    private List<Budget> budgets=new ArrayList<>();
+
+    @Setter
+    @Getter
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "customer")
+    private List<Expense> expenses=new ArrayList<>();
 
     public Customer() {
+    }
+
+    public Customer cloneCustomer(){
+        Customer customer=new Customer();
+        customer.setName(this.getName());
+        customer.setCity(this.getCity());
+        customer.setDescription(this.getDescription());
+        customer.setState(this.getState());
+        customer.setCountry(this.getCountry());
+        customer.setEmail(this.getEmail());
+        customer.setBudgets(this.budgets);
+        customer.setExpenses(this.expenses);
+        customer.user=null;
+        for (Budget budget:this.budgets){
+            budget.setCustomer(null);
+        }
+        for (Expense expense:this.expenses){
+            expense.setCustomer(null);
+        }
+        return customer;
+    }
+
+    public String getCsv(){
+        //customer_email,subject_or_name,type,status,expense
+        String csv="";
+        for (Expense expense:this.getExpenses()){
+            if(expense.getLead()!=null){
+                csv += this.getEmail()+","+expense.getLead().getName()+",lead,"+expense.getLead().getStatus()+","+expense.getAmount()+"\n";
+            }
+            if(expense.getTicket()!=null){
+                csv += this.getEmail()+","+expense.getTicket().getSubject()+",ticket,"+expense.getTicket().getStatus()+","+expense.getAmount()+"\n";
+            }
+        }
+        return csv;
     }
 
     public Customer(String name, String email, String position, String phone, String address, String city, String state, String country,
