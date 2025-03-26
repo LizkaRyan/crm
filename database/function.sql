@@ -16,7 +16,9 @@ delete from file;
 delete from google_drive_file;
 delete from customer;
 delete from customer_login_info;
+delete from user_roles;
 delete from `users` where id != 52;
+insert into user_roles(user_id,role_id) values(52,1);
 delete from expense;
 delete from budget;
 

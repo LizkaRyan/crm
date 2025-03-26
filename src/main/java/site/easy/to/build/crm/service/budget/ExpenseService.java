@@ -2,6 +2,7 @@ package site.easy.to.build.crm.service.budget;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.DepenseCause;
 import site.easy.to.build.crm.dto.SumChart;
@@ -15,6 +16,7 @@ import site.easy.to.build.crm.repository.budget.ExpenseRepository;
 import site.easy.to.build.crm.util.csv.exception.CellCSVException;
 import site.easy.to.build.crm.util.csv.exception.CsvException;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class ExpenseService {
     private final BudgetService budgetService;
 
     private final SeuilBudgetService seuilBudgetService;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public Expense save(Expense expense){
         return expenseRepository.save(expense);
@@ -153,6 +157,27 @@ public class ExpenseService {
     }
 
     public List<Expense> saveAll(List<Expense> expenses) {
+//        insertBatch(expenses);
         return expenseRepository.saveAll(expenses);
     }
+
+//    public void insertBatch(List<Expense> expenses){
+//        String sql = "INSERT INTO expense (amount, customer_id, ticket_id, lead_id) VALUES (?, ?, ?, ?)";
+//        jdbcTemplate.batchUpdate(sql, expenses, 50, (ps, entity) -> {
+//            ps.setDouble(1, entity.getAmount());
+//            ps.setInt(2, entity.getCustomer().getCustomerId());
+//            if(entity.getTicket()==null){
+//                ps.setNull(3, Types.INTEGER);
+//            }
+//            else{
+//                ps.setInt(3, entity.getTicket().getTicketId());
+//            }
+//            if(entity.getLead()==null){
+//                ps.setNull(4, Types.INTEGER);
+//            }
+//            else{
+//                ps.setInt(4, entity.getLead().getLeadId());
+//            }
+//        });
+//    }
 }

@@ -21,9 +21,9 @@ public class CsvSave {
     @Test
     public void saveCsv(){
         try {
-            MultipartFile multipartFileBudget=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\Feuille-4.csv");
+            MultipartFile multipartFileBudget=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\budget.csv");
             MultipartFile multipartFileExpense=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\expense.csv");
-            MultipartFile multipartFileCustomer=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\Feuille-3.csv");
+            MultipartFile multipartFileCustomer=getCsvFile("C:\\Users\\ryrab\\Desktop\\Ryan\\Etudes\\S6\\Evaluation\\Saison1\\crm\\src\\main\\resources\\csv\\customer.csv");
 
             BudgetCustomerExpenseCsv budgetCustomerExpenseCsv=new BudgetCustomerExpenseCsv();
             budgetCustomerExpenseCsv.setBudgetFile(multipartFileBudget);

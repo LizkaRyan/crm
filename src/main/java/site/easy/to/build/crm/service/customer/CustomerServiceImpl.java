@@ -1,7 +1,9 @@
 package site.easy.to.build.crm.service.customer;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.csv.CustomerCsv;
 import site.easy.to.build.crm.dto.csv.entity.CustomerUser;
@@ -15,13 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Customer findByCustomerId(int customerId) {
@@ -87,6 +88,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public List<Customer> saveAll(List<Customer> customers){
-        return this.customerRepository.saveAll(customers);
+        insertBatch(customers);
+        return this.customerRepository.findAll();
+    }
+
+    public void insertBatch(List<Customer> customers){
+        String sql = "INSERT INTO customer (name, address, city, state, country, user_id, email) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.batchUpdate(sql, customers, 50, (ps, entity) -> {
+            ps.setString(1, entity.getName());
+            ps.setString(2, entity.getAddress());
+            ps.setString(3, entity.getCity());
+            ps.setString(4, entity.getState());
+            ps.setString(5, entity.getCountry());
+            ps.setInt(6, entity.getUser().getId());
+            ps.setString(7,entity.getEmail());
+        });
     }
 }

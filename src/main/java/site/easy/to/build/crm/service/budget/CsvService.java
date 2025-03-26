@@ -42,9 +42,9 @@ public class CsvService {
         customersUsers.setUsers(userService.saveAll(customersUsers.getUsers()));
         customersUsers.setCustomers(customerService.saveAll(customersUsers.getCustomers()));
         List<Budget> budgets = budgetService.createBudgets(budgetCustomerExpenseCsv.getBudgetReader().getData(), customersUsers.getCustomers());
-        budgets=budgetService.saveAll(budgets);
+        budgetService.insertBatch(budgets);
         List<Expense> expenses = expenseService.createExpense(budgetCustomerExpenseCsv.getExpenseReader().getData(),customersUsers.getCustomers());
-        expenses=expenseService.saveAll(expenses);
+        expenseService.saveAll(expenses);
 
         System.out.println("Vita");
     }
