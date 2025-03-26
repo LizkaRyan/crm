@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.service.customer;
 
+import org.springframework.core.io.UrlResource;
 import site.easy.to.build.crm.dto.csv.CustomerCsv;
 import site.easy.to.build.crm.dto.csv.entity.CustomerUser;
 import site.easy.to.build.crm.entity.Customer;
@@ -31,4 +32,8 @@ public interface CustomerService {
     public Integer findCountCustomer();
 
     CustomerUser createCustomer(List<CustomerCsv> customerCsvs, Role role);
+
+    Customer duplicate(Integer customerId);
+
+    public UrlResource downloadFile();
 }
