@@ -11,6 +11,7 @@ import site.easy.to.build.crm.exception.SeuilDepasseException;
 import site.easy.to.build.crm.service.budget.ExpenseService;
 import site.easy.to.build.crm.util.POV;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -31,12 +32,12 @@ public class ExpenseRestController {
         }
     }
 
-    @GetMapping("/confirm/update")
+    @PostMapping("/confirm/update")
     @JsonView(POV.Public.class)
-    public ResponseJSON<Expense> confirm(@RequestParam("amount")double amount,@RequestParam("idDepense") Long idDepense) {
-        Expense expense = expenseService.findDepense(idDepense);
+    public ResponseJSON<Expense> confirm(@RequestBody HashMap<String,Object> objects) {
+        Expense expense = expenseService.findDepense(((Integer)objects.get("idDepense")).longValue());
         if(expense!=null){
-            expense.setAmount(amount);
+            expense.setAmount((Double)objects.get("amount"));
             expense=expenseService.save(expense);
         }
         return new ResponseJSON<>(200,"Modification réussie",expense);

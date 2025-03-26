@@ -15,6 +15,7 @@ import site.easy.to.build.crm.entity.budget.Expense;
 import site.easy.to.build.crm.util.POV;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -91,24 +92,24 @@ public class Customer {
     @Setter
     @Getter
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "customer")
-    private List<Budget> budgets;
+    private List<Budget> budgets=new ArrayList<>();
 
     @Setter
     @Getter
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "customer")
-    private List<Expense> expenses;
+    private List<Expense> expenses=new ArrayList<>();
 
     public Customer() {
     }
 
     public Customer cloneCustomer(){
         Customer customer=new Customer();
-        customer.setName(this.getName()+"-copy");
+        customer.setName(this.getName());
         customer.setCity(this.getCity());
         customer.setDescription(this.getDescription());
         customer.setState(this.getState());
         customer.setCountry(this.getCountry());
-        customer.setEmail(this.getEmail()+"-copy");
+        customer.setEmail(this.getEmail());
         customer.setBudgets(this.budgets);
         customer.setExpenses(this.expenses);
         customer.user=null;

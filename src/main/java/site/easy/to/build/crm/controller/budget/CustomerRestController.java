@@ -16,8 +16,6 @@ import site.easy.to.build.crm.util.csv.exception.CsvException;
 @CrossOrigin
 public class CustomerRestController {
 
-    private final CustomerService customerService;
-
     private final CsvService csvService;
 
     @PostMapping("/upload-multiple")
@@ -42,13 +40,5 @@ public class CustomerRestController {
         } catch (CsvException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @PostMapping("/login")
-    public Customer test(){
-        Customer customer=new Customer();
-        customer.setEmail("fmlsdkf");
-        customer.setState("sdkjfsdlk");
-        return customer;
     }
 }
