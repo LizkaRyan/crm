@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.service.budget;
 
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.csv.BudgetCsv;
 import site.easy.to.build.crm.entity.Customer;
@@ -18,6 +19,8 @@ import java.util.List;
 public class BudgetService {
 
     private final BudgetRepository budgetRepository;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public Budget save(Budget budget){
         return budgetRepository.save(budget);
@@ -61,5 +64,14 @@ public class BudgetService {
 
     public List<Budget> saveAll(List<Budget> budgets){
         return this.budgetRepository.saveAll(budgets);
+    }
+
+    public void insertBatch(List<Budget> budgets){
+        String sql = "INSERT INTO budget (name, budget, customer_id) VALUES (?, ?, ?)";
+        jdbcTemplate.batchUpdate(sql, budgets, 50, (ps, entity) -> {
+            ps.setString(1, entity.getName());
+            ps.setDouble(2, entity.getBudget());
+            ps.setInt(3, entity.getCustomer().getCustomerId());
+        });
     }
 }
