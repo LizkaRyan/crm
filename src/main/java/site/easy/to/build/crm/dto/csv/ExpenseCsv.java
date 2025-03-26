@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.dto.csv;
 
+import com.github.javafaker.Faker;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
