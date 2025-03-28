@@ -9,17 +9,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import site.easy.to.build.crm.dto.DepenseDTO;
+import site.easy.to.build.crm.dto.ExpenseDTO;
 import site.easy.to.build.crm.dto.SumChart;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.CustomerLoginInfo;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.entity.budget.Budget;
-import site.easy.to.build.crm.entity.budget.Depense;
+import site.easy.to.build.crm.entity.budget.Expense;
 import site.easy.to.build.crm.google.model.gmail.Attachment;
 import site.easy.to.build.crm.service.budget.BudgetService;
-import site.easy.to.build.crm.service.budget.DepenseService;
+import site.easy.to.build.crm.service.budget.ExpenseService;
 import site.easy.to.build.crm.service.budget.SeuilBudgetService;
 import site.easy.to.build.crm.service.customer.CustomerLoginInfoService;
 import site.easy.to.build.crm.service.customer.CustomerService;
@@ -33,8 +33,8 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/depense")
-public class DepenseController {
-    private final DepenseService depenseService;
+public class ExpenseController {
+    private final ExpenseService expenseService;
 
     private final BudgetService budgetService;
 
@@ -55,7 +55,7 @@ public class DepenseController {
         int customerId = authenticationUtils.getLoggedInUserId(authentication);
         CustomerLoginInfo customerLoginInfo = customerLoginInfoService.findById(customerId);
         Customer customer = customerService.findByEmail(customerLoginInfo.getEmail());
-        model.addAttribute("depenses", depenseService.findDepenseByCustomerId(customer.getCustomerId()));
+        model.addAttribute("depenses", expenseService.findDepenseByCustomerId(customer.getCustomerId()));
         return "depense/all-depense";
     }
 
@@ -66,7 +66,7 @@ public class DepenseController {
             return "error/500";
         }
         model.addAttribute("redirection", "/depense/ticket");
-        model.addAttribute("depense", new DepenseDTO());
+        model.addAttribute("expense", new ExpenseDTO());
 
         // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
 
@@ -81,17 +81,15 @@ public class DepenseController {
             return "error/500";
         }
         model.addAttribute("redirection", "/depense/lead");
-        model.addAttribute("depense", new DepenseDTO());
+        model.addAttribute("expense", new ExpenseDTO());
 
         // model.addAttribute("depense", new DepenseDTO(ticket.getCustomer().getCustomerId()));
-
-        model.addAttribute("budgets", budgetService.findByCustomerId(lead.getCustomer().getCustomerId()));
         return "depense/form";
     }
 
     @PostMapping("/ticket")
     public String insertDepenseAndTicket(HttpSession session,
-                                         @Validated @ModelAttribute("depense") DepenseDTO depenseDTO,
+                                         @Validated @ModelAttribute("expense") ExpenseDTO depenseDTO,
                                          BindingResult bindingResult,
                                          Model model) {
         Ticket ticket = (Ticket) session.getAttribute("ticket");
@@ -99,23 +97,22 @@ public class DepenseController {
             return "error/500";
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("budgets",budgetService.findByCustomerId(ticket.getCustomer().getCustomerId()));
             return "depense/form";
         }
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
-        if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
+        Double sumBudget = budgetService.findSumBudgetCustomer(ticket.getCustomer().getCustomerId());
+        SumChart sumDepense = expenseService.findSumDepense(ticket.getCustomer().getCustomerId());
+        if ((sumBudget * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/ticket";
         }
         ticket = ticketService.save(ticket);
-        Depense depense = new Depense(depenseDTO.getAmount(), budget, ticket);
-        depenseService.save(depense);
+        Expense expense = new Expense(depenseDTO.getAmount(), ticket,ticket.getCustomer());
+        expenseService.save(expense);
         return "redirect:/depense";
     }
 
     @PostMapping("/lead")
-    public String insertDepenseAndLead(HttpSession session, @ModelAttribute("depense") @Valid DepenseDTO depenseDTO
+    public String insertDepenseAndLead(HttpSession session, @ModelAttribute("expense") @Valid ExpenseDTO depenseDTO
             , BindingResult bindingResult
             , Authentication authentication
             , Model model) {
@@ -127,9 +124,9 @@ public class DepenseController {
             model.addAttribute("budgets",budgetService.findByCustomerId(lead.getCustomer().getCustomerId()));
             return "depense/form";
         }
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        SumChart sumDepense = depenseService.findSumDepenseOnBudget(depenseDTO.getIdBudget());
-        if ((budget.getBudget() * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
+        Double sumBudget = budgetService.findSumBudgetCustomer(lead.getCustomer().getCustomerId());
+        SumChart sumDepense = expenseService.findSumDepense(lead.getCustomer().getCustomerId());
+        if ((sumBudget * seuilBudgetService.findActualSeuilBudget().getTauxSeuil()) / 100 < sumDepense.getSum() + depenseDTO.getAmount()) {
             session.setAttribute("depense", depenseDTO);
             return "redirect:/depense/alert/lead";
         }
@@ -144,28 +141,27 @@ public class DepenseController {
             fileUtil.saveGoogleDriveFiles(authentication, allFiles, folderId, createdLead);
         }
 
-        Depense depense = new Depense(depenseDTO.getAmount(), budgetService.findById(depenseDTO.getIdBudget()), createdLead);
-        depenseService.save(depense);
+        Expense expense = new Expense(depenseDTO.getAmount(), createdLead,createdLead.getCustomer());
+        expenseService.save(expense);
 
         session.setAttribute("lead", null);
         session.setAttribute("allFiles", null);
         session.setAttribute("folderId", null);
         session.setAttribute("redirect", null);
 
-        return redirect;
+        return "redirect:/depense";
     }
 
     @GetMapping("/confirm/ticket")
     public String confirmDepenseAndTicket(HttpSession session) {
-        DepenseDTO depenseDTO = (DepenseDTO) session.getAttribute("depense");
+        ExpenseDTO depenseDTO = (ExpenseDTO) session.getAttribute("depense");
         Ticket ticket = (Ticket) session.getAttribute("ticket");
         if (ticket == null || depenseDTO == null) {
             return "error/500";
         }
         ticket = ticketService.save(ticket);
-        Budget budget = budgetService.findById(depenseDTO.getIdBudget());
-        Depense depense = new Depense(depenseDTO.getAmount(), budget, ticket);
-        depenseService.save(depense);
+        Expense expense = new Expense(depenseDTO.getAmount(), ticket,ticket.getCustomer());
+        expenseService.save(expense);
         return "redirect:/depense";
     }
 
@@ -174,7 +170,7 @@ public class DepenseController {
         Lead lead = (Lead) session.getAttribute("lead");
         List<Attachment> allFiles = (List<Attachment>) session.getAttribute("allFiles");
         String folderId = (String) session.getAttribute("folderId");
-        DepenseDTO depenseDTO = (DepenseDTO) session.getAttribute("depense");
+        ExpenseDTO depenseDTO = (ExpenseDTO) session.getAttribute("depense");
 
         Lead createdLead = leadService.save(lead);
         fileUtil.saveFiles(allFiles, createdLead);
@@ -183,8 +179,8 @@ public class DepenseController {
             fileUtil.saveGoogleDriveFiles(authentication, allFiles, folderId, createdLead);
         }
 
-        Depense depense = new Depense(depenseDTO.getAmount(), budgetService.findById(depenseDTO.getIdBudget()), createdLead);
-        depenseService.save(depense);
+        Expense expense = new Expense(depenseDTO.getAmount(), createdLead,createdLead.getCustomer());
+        expenseService.save(expense);
 
         session.setAttribute("lead", null);
         session.setAttribute("allFiles", null);
@@ -213,7 +209,7 @@ public class DepenseController {
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("depenses", depenseService.findAll());
+        model.addAttribute("depenses", expenseService.findAll());
         return "depense/all-depense";
     }
 

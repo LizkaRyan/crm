@@ -90,4 +90,8 @@ public class TicketServiceImpl implements TicketService{
     public void deleteAllByCustomer(Customer customer) {
         ticketRepository.deleteAllByCustomer(customer);
     }
+
+    public Integer findCountTicket(){
+        return this.ticketRepository.findCountTicket().orElse(0);
+    }
 }

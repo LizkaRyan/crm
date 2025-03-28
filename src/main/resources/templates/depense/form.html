@@ -77,7 +77,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Create Depense</h4>
-                            <form th:object="${depense}" th:action="${redirection}" method="post">
+                            <form th:object="${expense}" th:action="${redirection}" method="post">
 
                                 <div th:if="${#fields.hasGlobalErrors()}" class="error">
                                     <p style="color: red" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
@@ -90,14 +90,6 @@
                                 <div class="input-group">
                                     <span class="text-danger font-weight-bold" th:if="${#fields.hasErrors('amount')}"
                                           th:errors="*{amount}"></span>
-                                </div>
-
-                                <label class="m-t-20" for="status">Budget:</label>
-                                <div class="input-group">
-                                    <select id="status" th:field="*{idBudget}" class="form-control">
-                                        <option th:each="budget : ${budgets}" th:value="${budget.idBudget}"
-                                                th:text="${budget.name}"></option>
-                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary m-t-20">Create Depense</button>
                             </form>

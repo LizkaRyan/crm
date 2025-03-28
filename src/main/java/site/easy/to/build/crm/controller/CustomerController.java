@@ -1,7 +1,12 @@
 package site.easy.to.build.crm.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.util.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -11,10 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.entity.CustomerLoginInfo;
-import site.easy.to.build.crm.entity.OAuthUser;
-import site.easy.to.build.crm.entity.User;
+import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.google.service.acess.GoogleAccessService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
 import site.easy.to.build.crm.service.contract.ContractService;
@@ -27,6 +29,8 @@ import site.easy.to.build.crm.util.AuthenticationUtils;
 import site.easy.to.build.crm.util.AuthorizationUtil;
 import site.easy.to.build.crm.util.EmailTokenUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -82,6 +86,15 @@ public class CustomerController {
         customers = customerService.findByUserId(userId);
         model.addAttribute("customers",customers);
         return "customer/all-customers";
+    }
+
+    @GetMapping("/duplicate/{customer_id}")
+    public ResponseEntity<UrlResource> duplicate(@PathVariable("customer_id")Integer customerId) throws IOException {
+        customerService.duplicate(customerId);
+        UrlResource resource = customerService.downloadFile();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     @GetMapping("/{id}")

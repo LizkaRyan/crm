@@ -3,8 +3,7 @@ package site.easy.to.build.crm.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import org.hibernate.mapping.ToOne;
-import site.easy.to.build.crm.entity.budget.Depense;
+import site.easy.to.build.crm.entity.budget.Expense;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +50,7 @@ public class Ticket {
     private LocalDateTime createdAt;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.DETACH},mappedBy = "ticket")
-    private List<Depense> depenses;
+    private List<Expense> depens;
 
     public Ticket() {
     }

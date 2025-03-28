@@ -72,20 +72,60 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Import users</h4>
-                            <form th:action="@{/csv/import}"  id="email-form" method="post" enctype="multipart/form-data">
-                                <label class="m-t-20" for="file">Users CSV file:</label>
-                                <div class="input-group">
-                                    <input type="file" id="file" name="file" class="form-control form-control-file" required="required">
+                            <h4 class="card-title">Import CSV</h4>
+                            <form th:action="@{/csv}"  id="email-form" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="file">Expense Csv file:</label>
+                                        <div class="input-group">
+                                            <input type="file" id="file" name="expenseFile" class="form-control form-control-file" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="separator">Separator</label>
+                                        <div class="input-group">
+                                            <select id="separator" name="separatorExpense" class="form-control" required>
+                                                <option value="," selected>Comma (,)</option>
+                                                <option value=";">Semi-column (;)</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <label class="m-t-20" for="separator">Separator</label>
-                                <div class="input-group">
-                                    <select id="separator" name="separator" class="form-control" required>
-                                        <option value="," selected>Comma (,)</option>
-                                        <option value=";">Semi-column (;)</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="file">Budget Csv file:</label>
+                                        <div class="input-group">
+                                            <input type="file" id="file" name="budgetFile" class="form-control form-control-file" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="separator">Separator</label>
+                                        <div class="input-group">
+                                            <select id="separator" name="separatorBudget" class="form-control" required>
+                                                <option value="," selected>Comma (,)</option>
+                                                <option value=";">Semi-column (;)</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary m-t-20">Import users</button>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="file">Customer Csv file:</label>
+                                        <div class="input-group">
+                                            <input type="file" id="file" name="customerFile" class="form-control form-control-file" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="m-t-20" for="separator">Separator</label>
+                                        <div class="input-group">
+                                            <select id="separator" name="separatorCustomer" class="form-control" required>
+                                                <option value="," selected>Comma (,)</option>
+                                                <option value=";">Semi-column (;)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary m-t-20">Import CSV</button>
                             </form>
                         </div>
                     </div>

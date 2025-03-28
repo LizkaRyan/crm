@@ -2,11 +2,13 @@ package site.easy.to.build.crm.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Ticket;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
@@ -21,6 +23,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> findByManagerIdOrderByCreatedAtDesc(int managerId, Pageable pageable);
 
     List<Ticket> findByEmployeeIdOrderByCreatedAtDesc(int managerId, Pageable pageable);
+
+    @Query("select count(t) from Ticket t")
+    Optional<Integer> findCountTicket();
 
     List<Ticket> findByCustomerCustomerIdOrderByCreatedAtDesc(int customerId, Pageable pageable);
 

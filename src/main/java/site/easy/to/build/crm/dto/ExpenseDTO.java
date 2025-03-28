@@ -8,17 +8,14 @@ import site.easy.to.build.crm.customValidations.budget.SumDepense;
 
 @Getter
 @Setter
-@SumDepense
 @NoArgsConstructor
-public class DepenseDTO {
+public class ExpenseDTO {
     private Integer customerId;
-
-    private Long idBudget;
 
     @Min(value = 1)
     private double amount;
 
-    public DepenseDTO(Integer customerId){
+    public ExpenseDTO(Integer customerId){
         this.customerId=customerId;
     }
 }

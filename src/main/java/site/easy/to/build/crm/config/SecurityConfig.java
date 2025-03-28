@@ -1,12 +1,9 @@
 package site.easy.to.build.crm.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +13,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import site.easy.to.build.crm.config.oauth2.CustomOAuth2UserService;
 import site.easy.to.build.crm.config.oauth2.OAuthLoginSuccessHandler;
-import site.easy.to.build.crm.service.user.OAuthUserService;
-import site.easy.to.build.crm.util.StringUtils;
-
-import java.util.Optional;
 
 
 @Configuration
@@ -34,16 +27,13 @@ public class SecurityConfig {
 
     private final CustomerUserDetails customerUserDetails;
 
-    private final Environment environment;
-
     @Autowired
     public SecurityConfig(OAuthLoginSuccessHandler oAuth2LoginSuccessHandler, CustomOAuth2UserService oauthUserService, CrmUserDetails crmUserDetails,
-                          CustomerUserDetails customerUserDetails, Environment environment) {
+                          CustomerUserDetails customerUserDetails) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.oauthUserService = oauthUserService;
         this.crmUserDetails = crmUserDetails;
         this.customerUserDetails = customerUserDetails;
-        this.environment = environment;
     }
 
     @Bean
@@ -55,14 +45,13 @@ public class SecurityConfig {
 
         http.csrf((csrf) -> csrf
                 .csrfTokenRepository(httpSessionCsrfTokenRepository)
-                .ignoringRequestMatchers("/api/**")
         );
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
 
         http.
                 authorizeHttpRequests((authorize) -> authorize
-
-                        .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/set-employee-password/**").permitAll()
                         .requestMatchers("/change-password/**").permitAll()
                         .requestMatchers("/font-awesome/**").permitAll()
@@ -86,16 +75,14 @@ public class SecurityConfig {
                 ).userDetailsService(crmUserDetails)
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .successHandler(oAuth2LoginSuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oauthUserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
                 ).logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
                         .permitAll())
-                .exceptionHandling(exception -> {
-                    exception.accessDeniedHandler(accessDeniedHandler());
-                });
+                .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler()));
 
 
         return http.build();
@@ -117,9 +104,11 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf
                 .csrfTokenRepository(httpSessionCsrfTokenRepository)
         );
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
 
         http.securityMatcher("/customer-login/**").
                 authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/set-password/**").permitAll()
                         .requestMatchers("/font-awesome/**").permitAll()
                         .requestMatchers("/fonts/**").permitAll()
